@@ -1,9 +1,21 @@
 package org.imsi.lod_mapper;
 
+import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.functions.collect_set;
+import static org.apache.spark.sql.functions.flatten;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.SparkSession.Builder;
@@ -21,19 +33,46 @@ public class Mapper implements Serializable {
 	private static final long serialVersionUID = -2135269757431236587L;
 	private static String pathToPropertiesFile = "config.json";
 	private static ConfigObject configObject;
-	
+	private static Map<String, List<String>> params;
+
 	
 			
-    public static void main( String[] args ){
-        readProperties();
-        String id = "";
+    public static void main( String[] args ) throws IOException{
+        readProperties(args);
+        String id = "id";
         SparkSession sparkSession = setupSparkSession();
         Dataset<Row> records = sparkSession.sql(configObject.getQuery());
-        Dataset<Row> recordsGrouped = records.groupBy(id).
-        Dataset<Row> rdds = records.map((MapFunction<Row, Row>) row -> {
-        	
+        
+        //datasource group
+        Dataset<Row> datasourceRecords = records.groupBy(col("id")).agg(flatten(collect_set(col("id"))),
+        		flatten(collect_set(col("originalid"))),
+        		flatten(collect_set(col("englishname"))),
+        		flatten(collect_set(col("officialname"))),
+        		flatten(collect_set(col("dateofflatten(collect_set(collection"))),
+        		flatten(collect_set(col("dateoftransformation"))),
+        		flatten(collect_set(col("journal"))),
+        		flatten(collect_set(col("datasourcetype"))),
+        		flatten(collect_set(col("flatten(collect_set(collectedfrom"))),
+        		flatten(collect_set(col("pid"))),
+        		flatten(collect_set(col("longitude"))),
+        		flatten(collect_set(col("latitude"))),
+        		flatten(collect_set(col("subjects"))),
+        		flatten(collect_set(col("description"))),
+        		flatten(collect_set(col("websiteurl"))),
+        		flatten(collect_set(col("logourl"))),
+        		flatten(collect_set(col("accessinfopackage"))),
+        		flatten(collect_set(col("namespaceprefix"))),
+        		flatten(collect_set(col("versioning"))),
+        		flatten(collect_set(col("target"))),
+        		flatten(collect_set(col("reltype"))),
+        		flatten(collect_set(col("subreltype"))));
+
+        String[] columns = datasourceRecords.columns();
+        Dataset<Row> rdds = datasourceRecords.map((MapFunction<Row, Row>) row -> {
+        	System.err.println(row);
         	return row;
-        });
+        }, Encoders.bean(Row.class));
+        rdds.cache();
     }
 
 	private static SparkSession setupSparkSession() {
@@ -45,17 +84,54 @@ public class Mapper implements Serializable {
 
 	}
 
-	private static void readProperties() {
+	private static void readProperties(String[] args) throws IOException {
+		setInputParameters(args);
+		if (params.containsKey("properties"))
+			pathToPropertiesFile = params.get("properties").get(0);
+		else
+			pathToPropertiesFile = "config.json";
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		configObject = new ConfigObject();
 		try {
-			configObject = objectMapper.readValue(pathToPropertiesFile, ConfigObject.class);
+			configObject = objectMapper.readValue(new File(pathToPropertiesFile), ConfigObject.class);
+			System.err.println(configObject.getWarehouseLocation());
+			System.err.println(configObject.getDbName());
+			System.err.println(configObject.getQuery());
+
+
 		} catch (JsonMappingException e) {
 			e.printStackTrace();
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	private static void setInputParameters(String[] args) {
+		params = new HashMap<>();
+
+		List<String> options = null;
+		for (int i = 0; i < args.length; i++) {
+			final String a = args[i];
+
+			if (a.charAt(0) == '-') {
+				if (a.length() < 2) {
+					System.err.println("Error at argument " + a);
+					return;
+				}
+
+				options = new ArrayList<>();
+				params.put(a.substring(1), options);
+			} else if (options != null) {
+				options.add(a);
+			} else {
+				System.err.println("Illegal parameter usage");
+				return;
+			}
+		}
+		System.err.println(params);
+		
 	}
 }
 

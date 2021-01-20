@@ -13,6 +13,7 @@ public class ConfigObject implements Serializable{
 	private String dbName;
 	private String appName;
 	private String query;
+	private String propertyMap;
 	private HashMap<String, String> mappings;
 	
 	public String getWarehouseLocation() {
@@ -38,6 +39,9 @@ public class ConfigObject implements Serializable{
 	}
 	public void setQuery(String query) {
 		this.query = query;
+	}
+	public String getPropertyMap() {
+		return propertyMap;
 	}
 	
 }
