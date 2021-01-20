@@ -45,10 +45,11 @@
     </dependency>
   </dependencies>
   <properties>
-    <scala.binary.version>2.12</scala.binary.version>
+    <scala.binary.version>2.11</scala.binary.version>
     <log4j.version>2.5</log4j.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spark.version>2.4.0</spark.version>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 </project>

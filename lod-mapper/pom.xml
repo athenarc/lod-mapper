@@ -15,7 +15,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<log4j.version>2.5</log4j.version>		
-		<scala.binary.version>2.12</scala.binary.version>
+		<scala.binary.version>2.11</scala.binary.version>
+		<spark.version>2.4.0</spark.version>
 		
 	</properties>
 
@@ -33,13 +34,13 @@
 	</dependency>
 	<dependency>
 	    <groupId>org.apache.spark</groupId>
-	    <artifactId>spark-core_2.12</artifactId>
-	    <version>3.0.1</version>
+	    <artifactId>spark-core_2.11</artifactId>
+	    <version>${spark.version}</version>
 	</dependency>
 	<dependency>
 	    <groupId>org.apache.spark</groupId>
-	    <artifactId>spark-sql_2.12</artifactId>
-	    <version>3.0.1</version>
+	    <artifactId>spark-sql_2.11</artifactId>
+	    <version>${spark.version}</version>
 	</dependency>
   </dependencies>
   <build>
