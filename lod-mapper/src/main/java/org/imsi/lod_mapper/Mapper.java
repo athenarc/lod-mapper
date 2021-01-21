@@ -182,7 +182,7 @@ public class Mapper implements Serializable {
         		 }
         	}
             return rdfs.iterator();
-        }, Encoders.kryo(RDF.class));
+        }, Encoders.bean(RDF.class));
         rdfDataset.show(false);
     }
 
