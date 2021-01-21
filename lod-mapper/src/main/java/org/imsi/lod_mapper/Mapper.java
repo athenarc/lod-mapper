@@ -67,12 +67,11 @@ public class Mapper implements Serializable {
         		(collect_set(col("target"))),
         		(collect_set(col("reltype"))),
         		(collect_set(col("subreltype"))));
-
-        Dataset<Row> rdds = datasourceRecords.map((MapFunction<Row, Row>) row -> {
-        	System.out.println(row);
-        	return row;
-        }, Encoders.bean(Row.class));
-        rdds.collect();
+        	datasourceRecords.show();
+//        Dataset<Row> rdds = datasourceRecords.map((MapFunction<Row, Row>) row -> {
+//        	System.out.println(row);
+//        	return row;
+//        }, Encoders.bean(Row.class));
     }
 
 	private static SparkSession setupSparkSession() {
