@@ -167,10 +167,13 @@ public class Mapper implements Serializable {
         //datasourceRecords.show();  
         Dataset<RDF> rdfDataset = groupedRecords.flatMap((FlatMapFunction<Row, RDF>) row -> {
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
+        	System.out.println(columnsI);
         	List<RDF> rdfs = new ArrayList<>();
         	String rowId = row.getString(0);
+        	System.out.println(rowId);
         	for (int i = 1; i < columnsI.size(); i++) {
         		 List<String> col = row.getList(i);
+        		 System.out.println(col);
         		 for(int j = 0; j < col.size(); j++) {
         			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
         			 rdfs.add(rdf);
