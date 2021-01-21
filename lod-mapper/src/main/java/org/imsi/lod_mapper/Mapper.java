@@ -49,7 +49,7 @@ public class Mapper implements Serializable {
         		(collect_set(col("originalid"))),
         		(collect_set(col("englishname"))),
         		(collect_set(col("officialname"))),
-        		(collect_set(col("dateofflatten(collect_set(collection"))),
+        		(collect_set(col("dateofcollection"))),
         		(collect_set(col("dateoftransformation"))),
         		(collect_set(col("journal"))),
         		(collect_set(col("datasourcetype"))),
