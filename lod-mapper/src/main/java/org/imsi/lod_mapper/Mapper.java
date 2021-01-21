@@ -69,10 +69,10 @@ public class Mapper implements Serializable {
         		(collect_set(col("subreltype"))));
 
         Dataset<Row> rdds = datasourceRecords.map((MapFunction<Row, Row>) row -> {
-        	System.err.println(row);
+        	System.out.println(row);
         	return row;
         }, Encoders.bean(Row.class));
-        rdds.cache();
+        rdds.collect();
     }
 
 	private static SparkSession setupSparkSession() {
