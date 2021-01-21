@@ -1,8 +1,8 @@
 package org.imsi.lod_mapper;
 
 import static org.apache.spark.sql.functions.col;
-import static org.apache.spark.sql.functions.collect_set;
 import static org.apache.spark.sql.functions.flatten;
+import static org.apache.spark.sql.functions.collect_set;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,12 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.SparkSession.Builder;
+import org.apache.spark.sql.SparkSession;
 import org.imsi.lod_mapper.model.ConfigObject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,30 +45,29 @@ public class Mapper implements Serializable {
         Dataset<Row> records = sparkSession.sql(configObject.getQuery());
         
         //datasource group
-        Dataset<Row> datasourceRecords = records.groupBy(col("id")).agg(flatten(collect_set(col("id"))),
-        		flatten(collect_set(col("originalid"))),
-        		flatten(collect_set(col("englishname"))),
-        		flatten(collect_set(col("officialname"))),
-        		flatten(collect_set(col("dateofflatten(collect_set(collection"))),
-        		flatten(collect_set(col("dateoftransformation"))),
-        		flatten(collect_set(col("journal"))),
-        		flatten(collect_set(col("datasourcetype"))),
-        		flatten(collect_set(col("flatten(collect_set(collectedfrom"))),
+        Dataset<Row> datasourceRecords = records.groupBy(col("id")).agg((collect_set(col("id"))),
+        		(collect_set(col("originalid"))),
+        		(collect_set(col("englishname"))),
+        		(collect_set(col("officialname"))),
+        		(collect_set(col("dateofflatten(collect_set(collection"))),
+        		(collect_set(col("dateoftransformation"))),
+        		(collect_set(col("journal"))),
+        		(collect_set(col("datasourcetype"))),
+        		(collect_set(col("collectedfrom"))),
         		flatten(collect_set(col("pid"))),
-        		flatten(collect_set(col("longitude"))),
-        		flatten(collect_set(col("latitude"))),
+        		(collect_set(col("longitude"))),
+        		(collect_set(col("latitude"))),
         		flatten(collect_set(col("subjects"))),
-        		flatten(collect_set(col("description"))),
-        		flatten(collect_set(col("websiteurl"))),
-        		flatten(collect_set(col("logourl"))),
-        		flatten(collect_set(col("accessinfopackage"))),
-        		flatten(collect_set(col("namespaceprefix"))),
-        		flatten(collect_set(col("versioning"))),
-        		flatten(collect_set(col("target"))),
-        		flatten(collect_set(col("reltype"))),
-        		flatten(collect_set(col("subreltype"))));
+        		(collect_set(col("description"))),
+        		(collect_set(col("websiteurl"))),
+        		(collect_set(col("logourl"))),
+        		(collect_set(col("accessinfopackage"))),
+        		(collect_set(col("namespaceprefix"))),
+        		(collect_set(col("versioning"))),
+        		(collect_set(col("target"))),
+        		(collect_set(col("reltype"))),
+        		(collect_set(col("subreltype"))));
 
-        String[] columns = datasourceRecords.columns();
         Dataset<Row> rdds = datasourceRecords.map((MapFunction<Row, Row>) row -> {
         	System.err.println(row);
         	return row;
