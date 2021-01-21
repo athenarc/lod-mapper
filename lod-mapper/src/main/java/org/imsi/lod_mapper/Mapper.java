@@ -167,6 +167,7 @@ public class Mapper implements Serializable {
 
         //datasourceRecords.show();  
         Dataset<RDF> rdfDataset = groupedRecords.flatMap((FlatMapFunction<Row, RDF>) row -> {
+        	System.out.println(row);
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
         	List<RDF> rdfs = new ArrayList<>();
         	String rowId = row.getString(0);
@@ -205,11 +206,6 @@ public class Mapper implements Serializable {
 		configObject = new ConfigObject();
 		try {
 			configObject = objectMapper.readValue(new File(pathToPropertiesFile), ConfigObject.class);
-			System.err.println(configObject.getWarehouseLocation());
-			System.err.println(configObject.getDbName());
-			System.err.println(configObject.getQuery());
-
-
 		} catch (JsonMappingException e) {
 			e.printStackTrace();
 		} catch (JsonProcessingException e) {
