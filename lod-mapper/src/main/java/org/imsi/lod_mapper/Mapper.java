@@ -171,15 +171,16 @@ public class Mapper implements Serializable {
         	String rowId = row.getId();
         	for (int i = 1; i < columnsI.size(); i++) {
         		 List<String> col = row.get(i);
-        		 for(int j = 0; j < col.size(); j++) {
-        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
-        			 System.out.println(rdf);
-        			 rdfs.add(rdf);
-        		 }
+        		 if(col != null)
+	        		 for(int j = 0; j < col.size(); j++) {
+	        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
+	        			 System.out.println(rdf);
+	        			 rdfs.add(rdf);
+	        		 }
         	}
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
-        rdfDataset.take(2);
+        rdfDataset.show();
     }
 
 	private static SparkSession setupSparkSession() {
