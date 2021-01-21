@@ -174,13 +174,14 @@ public class Mapper implements Serializable {
         		 if(col != null)
 	        		 for(int j = 0; j < col.size(); j++) {
 	        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
-	        			 System.out.println(rdf);
 	        			 rdfs.add(rdf);
 	        		 }
         	}
+			 System.out.println(rdfs);
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
-        System.out.println(rdfDataset.collectAsList());
+        rdfDataset.take(10);
+        //System.out.println(rdfDataset.collectAsList());
     }
 
 	private static SparkSession setupSparkSession() {
