@@ -7,26 +7,23 @@ import static org.apache.spark.sql.functions.collect_set;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession.Builder;
-import org.apache.spark.sql.SparkSession;
 import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
+import org.imsi.lod_mapper.model.Organisation;
 import org.imsi.lod_mapper.model.RDF;
+import org.apache.spark.sql.SparkSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -165,15 +162,16 @@ public class Mapper implements Serializable {
 
         Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext().broadcast(new BroadcastVars(columns), classTagBroadcastVars);
 
-        //datasourceRecords.show();  
-        Dataset<RDF> rdfDataset = groupedRecords.flatMap((FlatMapFunction<Row, RDF>) row -> {
+        //datasourceRecords.show(); 
+        Dataset<Organisation> orgRecords = groupedRecords.as(Encoders.bean(Organisation.class));
+        Dataset<RDF> rdfDataset = orgRecords.flatMap((FlatMapFunction<Organisation, RDF>) row -> {
         	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
-        	String rowId = row.getString(0);
+        	String rowId = row.getId();
 //        	System.out.println("id" + rowId);
         	for (int i = 1; i < columnsI.size(); i++) {
-        		 List<String> col = row.getList(i);
+        		 List<String> col = row.get(i);
 //        		 System.out.println("Col Val" + col);
         		 for(int j = 0; j < col.size(); j++) {
         			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
