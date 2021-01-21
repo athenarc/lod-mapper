@@ -14,6 +14,7 @@ public class ConfigObject implements Serializable{
 	private String appName;
 	private String query;
 	private String propertyMap;
+	private Integer dataset;
 	private HashMap<String, String> mappings;
 	
 	public String getWarehouseLocation() {
@@ -42,6 +43,12 @@ public class ConfigObject implements Serializable{
 	}
 	public String getPropertyMap() {
 		return propertyMap;
+	}
+	public Integer getDataset() {
+		return dataset;
+	}
+	public void setDataset(Integer dataset) {
+		this.dataset = dataset;
 	}
 	
 }
