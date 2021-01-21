@@ -20,6 +20,18 @@ public class RDF implements Serializable {
 		this.value = value;
 	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setProperty(String property) {
+		this.property = property;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -36,6 +48,6 @@ public class RDF implements Serializable {
 	public String toString() {
 		return "RDF [id=" + id + ", property=" + property + ", value=" + value + "]";
 	}
-	
+
 	
 }
