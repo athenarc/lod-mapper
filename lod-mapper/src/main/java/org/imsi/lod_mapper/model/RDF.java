@@ -12,6 +12,8 @@ public class RDF implements Serializable {
 	private String property;
 	private String value;
 	
+	public RDF() {}
+	
 	public RDF(String id, String property, String value) {
 		this.id = id;
 		this.property = property;
