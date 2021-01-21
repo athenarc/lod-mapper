@@ -9,13 +9,13 @@ public class ConfigObject implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -6460630846589017696L;
-	private String warehouseLocation;
-	private String dbName;
-	private String appName;
-	private String query;
-	private String propertyMap;
-	private Integer dataset;
-	private HashMap<String, String> mappings;
+	protected String warehouseLocation;
+	protected String dbName;
+	protected String appName;
+	protected String query;
+	protected String propertyMap;
+	protected Integer dataset;
+	protected HashMap<String, String> mappings;
 	
 	public String getWarehouseLocation() {
 		return warehouseLocation;

@@ -8,9 +8,9 @@ public class RDF implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -4897164969107241732L;
-	private String id;
-	private String property;
-	private String value;
+	protected String id;
+	protected String property;
+	protected String value;
 	
 	public RDF(String id, String property, String value) {
 		super();

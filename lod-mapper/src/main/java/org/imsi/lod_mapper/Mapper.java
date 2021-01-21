@@ -82,7 +82,6 @@ public class Mapper implements Serializable {
         		break;
         	case(2):
 		        // Organization
-        		System.err.println(2);
         		groupedRecords = records.groupBy(col("id")).agg(
         		        collect_set(col("originalid")).alias("originalid"),
         		        collect_set(col("legalname")).alias("legalname"),
@@ -101,7 +100,6 @@ public class Mapper implements Serializable {
         		break;
         	case(3):
         		//project
-        		System.err.println(3);
         		groupedRecords = records.groupBy(col("id")).agg(
 	        		collect_set(col("acronym")).alias("acronym"),
 	        		collect_set(col("callidentifier")).alias("callidentifier"),
@@ -133,7 +131,6 @@ public class Mapper implements Serializable {
 	        		break;
         	
         	case(4):
-        		System.err.println(4);
         		groupedRecords = records.groupBy(col("id")).agg(
 	        		collect_set(col("originalid")).alias("originalid"),
 	        		collect_set(col("dateofcollection")).alias("dateofcollection"),
@@ -172,10 +169,10 @@ public class Mapper implements Serializable {
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
         	List<RDF> rdfs = new ArrayList<>();
         	String rowId = row.getString(0);
-        	System.err.println("id" + rowId);
+        	System.out.println("id" + rowId);
         	for (int i = 1; i < columnsI.size(); i++) {
         		 List<String> col = row.getList(i);
-        		 System.err.println("Col Val" + col);
+        		 System.out.println("Col Val" + col);
         		 for(int j = 0; j < col.size(); j++) {
         			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
         			 System.out.println(rdf);
