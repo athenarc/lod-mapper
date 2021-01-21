@@ -54,6 +54,7 @@ public class Mapper implements Serializable {
         
         //datasource group
         Dataset<Row> groupedRecords = null;
+        records.show(false);
         switch(configObject.getDataset()) {
         	case(1):
         		//datasource
@@ -158,7 +159,7 @@ public class Mapper implements Serializable {
 
         }
         
-        groupedRecords.show();
+        groupedRecords.show(false);
         List<String> columns = Arrays.asList(groupedRecords.columns());
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
@@ -169,10 +170,10 @@ public class Mapper implements Serializable {
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
         	List<RDF> rdfs = new ArrayList<>();
         	String rowId = row.getString(0);
-        	System.out.println("id" + rowId);
+//        	System.out.println("id" + rowId);
         	for (int i = 1; i < columnsI.size(); i++) {
         		 List<String> col = row.getList(i);
-        		 System.out.println("Col Val" + col);
+//        		 System.out.println("Col Val" + col);
         		 for(int j = 0; j < col.size(); j++) {
         			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
         			 System.out.println(rdf);
@@ -181,7 +182,7 @@ public class Mapper implements Serializable {
         	}
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
-        rdfDataset.show();
+        rdfDataset.show(false);
     }
 
 	private static SparkSession setupSparkSession() {
