@@ -169,19 +169,18 @@ public class Mapper implements Serializable {
         Dataset<RDF> rdfDataset = groupedRecords.flatMap((FlatMapFunction<Row, RDF>) row -> {
         	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
-
-//        	List<String> columnsI = broadcastColumns.getValue().getColumns();
-//        	String rowId = row.getString(0);
-////        	System.out.println("id" + rowId);
-//        	for (int i = 1; i < columnsI.size(); i++) {
-//        		 List<String> col = row.getList(i);
-////        		 System.out.println("Col Val" + col);
-//        		 for(int j = 0; j < col.size(); j++) {
-//        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
-//        			 System.out.println(rdf);
-//        			 rdfs.add(rdf);
-//        		 }
-//        	}
+        	List<String> columnsI = broadcastColumns.getValue().getColumns();
+        	String rowId = row.getString(0);
+//        	System.out.println("id" + rowId);
+        	for (int i = 1; i < columnsI.size(); i++) {
+        		 List<String> col = row.getList(i);
+//        		 System.out.println("Col Val" + col);
+        		 for(int j = 0; j < col.size(); j++) {
+        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
+        			 System.out.println(rdf);
+        			 rdfs.add(rdf);
+        		 }
+        	}
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
         rdfDataset.show(false);
