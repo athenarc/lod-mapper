@@ -157,6 +157,7 @@ public class Mapper implements Serializable {
         }
         
         groupedRecords.show(false);
+        groupedRecords.cache();
         List<String> columns = Arrays.asList(groupedRecords.columns());
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
