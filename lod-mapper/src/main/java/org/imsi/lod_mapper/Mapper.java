@@ -57,7 +57,6 @@ public class Mapper implements Serializable {
         switch(configObject.getDataset()) {
         	case(1):
         		//datasource
-        		System.err.println(1);
         		groupedRecords = records.groupBy(col("id")).agg(
                 		(collect_set(col("originalid"))).alias("originalid"),
                 		(collect_set(col("englishname"))).alias("englishname"),
@@ -79,7 +78,7 @@ public class Mapper implements Serializable {
                 		(collect_set(col("versioning"))).alias("versioning"),
                 		(collect_set(col("target"))).alias("target"),
                 		(collect_set(col("reltype"))).alias("reltype"),
-                		(collect_set(col("subreltype")))).alias("subreltype");
+                		(collect_set(col("subreltype"))).alias("subreltype"));
         		break;
         	case(2):
 		        // Organization
@@ -162,7 +161,7 @@ public class Mapper implements Serializable {
 
         }
         
-
+        groupedRecords.show();
         List<String> columns = Arrays.asList(groupedRecords.columns());
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
@@ -171,15 +170,15 @@ public class Mapper implements Serializable {
         //datasourceRecords.show();  
         Dataset<RDF> rdfDataset = groupedRecords.flatMap((FlatMapFunction<Row, RDF>) row -> {
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
-        	System.err.println(columnsI);
         	List<RDF> rdfs = new ArrayList<>();
         	String rowId = row.getString(0);
-        	System.err.println(rowId);
+        	System.err.println("id" + rowId);
         	for (int i = 1; i < columnsI.size(); i++) {
         		 List<String> col = row.getList(i);
-        		 System.err.println(col);
+        		 System.err.println("Col Val" + col);
         		 for(int j = 0; j < col.size(); j++) {
         			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
+        			 System.out.println(rdf);
         			 rdfs.add(rdf);
         		 }
         	}
