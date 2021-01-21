@@ -157,14 +157,13 @@ public class Mapper implements Serializable {
         }
         
         groupedRecords.show(false);
-        groupedRecords.cache();
         List<String> columns = Arrays.asList(groupedRecords.columns());
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
         Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext().broadcast(new BroadcastVars(columns), classTagBroadcastVars);
 
-        //datasourceRecords.show(); 
         Dataset<Organisation> orgRecords = groupedRecords.as(Encoders.bean(Organisation.class));
+        orgRecords.show();
         Dataset<RDF> rdfDataset = orgRecords.flatMap((FlatMapFunction<Organisation, RDF>) row -> {
         	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();

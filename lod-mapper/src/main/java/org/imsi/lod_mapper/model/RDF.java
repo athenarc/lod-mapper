@@ -13,7 +13,6 @@ public class RDF implements Serializable {
 	private String value;
 	
 	public RDF(String id, String property, String value) {
-		super();
 		this.id = id;
 		this.property = property;
 		this.value = value;
