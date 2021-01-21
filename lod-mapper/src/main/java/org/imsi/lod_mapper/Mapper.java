@@ -162,15 +162,15 @@ public class Mapper implements Serializable {
 
         Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext().broadcast(new BroadcastVars(columns), classTagBroadcastVars);
 
-        Dataset<Organisation> orgRecords = groupedRecords.as(Encoders.bean(Organisation.class));
+        //Dataset<Organisation> orgRecords = groupedRecords.as(Encoders.bean(Organisation.class));
 
-        Dataset<RDF> rdfDataset = orgRecords.flatMap((FlatMapFunction<Organisation, RDF>) row -> {
+        Dataset<RDF> rdfDataset = groupedRecords.flatMap((FlatMapFunction<Row, RDF>) row -> {
         	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
-        	String rowId = row.getId();
+        	String rowId = row.get(0).toString();
         	for (int i = 1; i < columnsI.size(); i++) {
-        		 List<String> col = row.get(i);
+        		 List<String> col = row.getList(i);
         		 if(col != null)
 	        		 for(int j = 0; j < col.size(); j++) {
 	        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
