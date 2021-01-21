@@ -180,7 +180,7 @@ public class Mapper implements Serializable {
         	}
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
-        rdfDataset.show();
+        System.out.println(rdfDataset.collectAsList());
     }
 
 	private static SparkSession setupSparkSession() {
