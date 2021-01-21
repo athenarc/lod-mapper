@@ -157,33 +157,32 @@ public class Mapper implements Serializable {
         }
         
         groupedRecords.show(false);
-        groupedRecords.cache();
         List<String> columns = Arrays.asList(groupedRecords.columns());
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
         Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext().broadcast(new BroadcastVars(columns), classTagBroadcastVars);
 
         Dataset<Organisation> orgRecords = groupedRecords.as(Encoders.bean(Organisation.class));
-        orgRecords.cache();
+
         Dataset<RDF> rdfDataset = orgRecords.flatMap((FlatMapFunction<Organisation, RDF>) row -> {
         	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
-        	RDF rdf = new RDF("1", "1", "1");
-        	rdfs.add(rdf);
-//        	List<String> columnsI = broadcastColumns.getValue().getColumns();
-//        	String rowId = row.getId();
-////        	System.out.println("id" + rowId);
-//        	for (int i = 1; i < columnsI.size(); i++) {
-//        		 List<String> col = row.get(i);
-////        		 System.out.println("Col Val" + col);
-//        		 for(int j = 0; j < col.size(); j++) {
-//        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
-//        			 System.out.println(rdf);
-//        			 rdfs.add(rdf);
-//        		 }
-//        	}
+//        	RDF rdf = new RDF("1", "1", "1");
+//        	rdfs.add(rdf);
+        	List<String> columnsI = broadcastColumns.getValue().getColumns();
+        	String rowId = row.getId();
+//        	System.out.println("id" + rowId);
+        	for (int i = 1; i < columnsI.size(); i++) {
+        		 List<String> col = row.get(i);
+//        		 System.out.println("Col Val" + col);
+        		 for(int j = 0; j < col.size(); j++) {
+        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
+        			 System.out.println(rdf);
+        			 rdfs.add(rdf);
+        		 }
+        	}
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class));
+        }, Encoders.kryo(RDF.class));
         rdfDataset.show(false);
     }
 
