@@ -49,12 +49,14 @@ public class Mapper implements Serializable {
 	
 			
     public static void main( String[] args ) throws IOException{
+    	
+    	// Read config properites
         readProperties(args);
         
-        String id = "id";
         SparkSession sparkSession = setupSparkSession();
+        
+        // Delete data if already exists
         FileSystem fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
-
         Path outPutPath = new Path(configObject.getDatapath());
         if (fs.exists(outPutPath))
         	fs.delete(outPutPath, true);
@@ -63,6 +65,10 @@ public class Mapper implements Serializable {
         //datasource group
         Dataset<Row> groupedRecords = null;
         records.show(false);
+        
+        // Create the grouped object based on each different dataset
+        // The collect_set function, collects all the different values of each row, while the flatten, flattens many arrays into one
+        // This way each column is now a List<String>
         switch(configObject.getDataset()) {
         	case(1):
         		//datasource
@@ -169,13 +175,17 @@ public class Mapper implements Serializable {
         }
         groupedRecords.show(false);
         List<String> columns = Arrays.asList(groupedRecords.columns());
+        
+        // Broadcast the variables needed by the workers
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
         Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext()
         		.broadcast(new BroadcastVars(columns, configObject.getPropertyMap(), configObject.getValueMap(), configObject.getIdMap()), classTagBroadcastVars);
 
-        //Dataset<Organisation> orgRecords = groupedRecords.as(Encoders.bean(Organisation.class));
-
+        /* This is the beef region of the code, where we transform each column into an RDF.
+         * For each row we get each of its values (List<String>) and then for each one of those we create and RDF
+         * The id, is the id of the row, the property is the name of the column while the value is the value from the List.
+         */
         Dataset<RDF> rdfDataset = groupedRecords.flatMap((FlatMapFunction<Row, RDF>) row -> {
         	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
@@ -202,6 +212,7 @@ public class Mapper implements Serializable {
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
         
+        // Create a single dataset of RDFS.
         Dataset<SingleRDF> rdfs = rdfDataset.map((MapFunction<RDF, SingleRDF>) row -> {
         	String rid = row.getId();
         	String property = row.getProperty();
@@ -210,8 +221,6 @@ public class Mapper implements Serializable {
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
         rdfs.javaRDD().saveAsTextFile(configObject.getDatapath());
-        //rdfs.write().sav(configObject.getDatapath());
-        //System.out.println(rdfDataset.collectAsList());
     }
 
 	private static SparkSession setupSparkSession() {
