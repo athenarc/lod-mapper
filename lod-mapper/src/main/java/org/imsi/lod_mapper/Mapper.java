@@ -192,7 +192,7 @@ public class Mapper implements Serializable {
 		        		 for(int j = 0; j < col.size(); j++) {
 		        			 String val = col.get(j);
 		        			 if(val.contains("NULL")) continue;
-		        			 if(val.contains("http://")) val = "<" + val + ">";
+		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 		        			 else val = '"' + val + '"';
 		        			 RDF rdf = new RDF(idVal + rowId, propertyVal + columns.get(i), val);
 		        			 rdfs.add(rdf);
