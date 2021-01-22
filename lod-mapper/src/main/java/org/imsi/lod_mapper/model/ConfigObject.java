@@ -14,6 +14,7 @@ public class ConfigObject implements Serializable{
 	protected String appName;
 	protected String query;
 	protected String propertyMap;
+	protected String valueMap;
 	protected Integer dataset;
 	protected HashMap<String, String> mappings;
 	
@@ -49,6 +50,12 @@ public class ConfigObject implements Serializable{
 	}
 	public void setDataset(Integer dataset) {
 		this.dataset = dataset;
+	}
+	public String getValueMap() {
+		return valueMap;
+	}
+	public void setValueMap(String valueMap) {
+		this.valueMap = valueMap;
 	}
 	
 }

@@ -162,7 +162,8 @@ public class Mapper implements Serializable {
         List<String> columns = Arrays.asList(groupedRecords.columns());
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
-        Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext().broadcast(new BroadcastVars(columns), classTagBroadcastVars);
+        Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext()
+        		.broadcast(new BroadcastVars(columns, configObject.getPropertyMap(), configObject.getValueMap()), classTagBroadcastVars);
 
         //Dataset<Organisation> orgRecords = groupedRecords.as(Encoders.bean(Organisation.class));
 
@@ -170,17 +171,20 @@ public class Mapper implements Serializable {
         	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
+        	String propertyVal = broadcastColumns.getValue().getPropertyMap();
+        	String valueVal = broadcastColumns.getValue().getValueMap();
         	String rowId = row.get(0).toString();
-        	for (int i = 1; i < columnsI.size(); i++) {
-        		 List<String> col = row.getList(i);
-        		 if(col != null)
-	        		 for(int j = 0; j < col.size(); j++) {
-	        			 
-	        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
-	        			 rdfs.add(rdf);
-	        		 }
+        	if(!rowId.contains("dedup")) {
+	        	for (int i = 1; i < columnsI.size(); i++) {
+	        		 List<String> col = row.getList(i);
+	        		 if(col != null)
+		        		 for(int j = 0; j < col.size(); j++) {
+		        			 
+		        			 RDF rdf = new RDF(rowId, propertyVal + columns.get(i), valueVal + col.get(j));
+		        			 rdfs.add(rdf);
+		        		 }
+	        	}
         	}
-			 System.out.println(rdfs);
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
         rdfDataset.show(200, false);
