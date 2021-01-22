@@ -157,7 +157,6 @@ public class Mapper implements Serializable {
         		break;
 
         }
-        System.out.println(groupedRecords.dtypes());
         groupedRecords.show(false);
         List<String> columns = Arrays.asList(groupedRecords.columns());
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
@@ -180,7 +179,7 @@ public class Mapper implements Serializable {
 	        		 if(col != null)
 		        		 for(int j = 0; j < col.size(); j++) {
 		        			 String val = col.get(j);
-		        			 val = val == null ? null : valueVal + val;
+		        			 val = val.contains("NULL") ? "NULL" : valueVal + val;
 		        			 RDF rdf = new RDF(rowId, propertyVal + columns.get(i), val);
 		        			 rdfs.add(rdf);
 		        		 }
