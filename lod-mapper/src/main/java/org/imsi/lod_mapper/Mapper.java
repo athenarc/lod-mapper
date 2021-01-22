@@ -179,8 +179,9 @@ public class Mapper implements Serializable {
 	        		 List<String> col = row.getList(i);
 	        		 if(col != null)
 		        		 for(int j = 0; j < col.size(); j++) {
-		        			 
-		        			 RDF rdf = new RDF(rowId, propertyVal + columns.get(i), valueVal + col.get(j));
+		        			 String val = col.get(j);
+		        			 val = val == null ? null : valueVal + val;
+		        			 RDF rdf = new RDF(rowId, propertyVal + columns.get(i), val);
 		        			 rdfs.add(rdf);
 		        		 }
 	        	}
