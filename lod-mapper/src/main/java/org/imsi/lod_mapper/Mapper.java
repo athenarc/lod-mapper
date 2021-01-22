@@ -191,7 +191,9 @@ public class Mapper implements Serializable {
 	        		 if(col != null)
 		        		 for(int j = 0; j < col.size(); j++) {
 		        			 String val = col.get(j);
-		        			 val = val.contains("NULL") ? "NULL" : valueVal + val;
+		        			 if(val.contains("NULL")) continue;
+		        			 if(val.contains("http://")) val = "<" + val + ">";
+		        			 else val = '"' + val + '"';
 		        			 RDF rdf = new RDF(idVal + rowId, propertyVal + columns.get(i), val);
 		        			 rdfs.add(rdf);
 		        		 }
@@ -207,8 +209,8 @@ public class Mapper implements Serializable {
         	SingleRDF singleRDF = new SingleRDF(rid, property, value);
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
-        
-        rdfs.write().save(configObject.getDatapath());
+        rdfs.javaRDD().saveAsTextFile(configObject.getDatapath());
+        //rdfs.write().sav(configObject.getDatapath());
         //System.out.println(rdfDataset.collectAsList());
     }
 
