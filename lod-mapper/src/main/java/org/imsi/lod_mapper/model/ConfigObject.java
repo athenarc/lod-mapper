@@ -17,6 +17,7 @@ public class ConfigObject implements Serializable{
 	protected String valueMap;
 	protected String idMap;
 	protected Integer dataset;
+	protected String datapath;
 	protected HashMap<String, String> mappings;
 	
 	public String getWarehouseLocation() {
@@ -63,6 +64,12 @@ public class ConfigObject implements Serializable{
 	}
 	public void setIdMap(String idMap) {
 		this.idMap = idMap;
+	}
+	public String getDatapath() {
+		return datapath;
+	}
+	public void setDatapath(String datapath) {
+		this.datapath = datapath;
 	}
 	
 }

@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.broadcast.Broadcast;
@@ -48,8 +50,14 @@ public class Mapper implements Serializable {
 			
     public static void main( String[] args ) throws IOException{
         readProperties(args);
+        
         String id = "id";
         SparkSession sparkSession = setupSparkSession();
+        FileSystem fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
+
+        Path outPutPath = new Path(configObject.getDatapath());
+        if (fs.exists(outPutPath))
+        	fs.delete(outPutPath, true);
         Dataset<Row> records = sparkSession.sql(configObject.getQuery());
         
         //datasource group
@@ -200,7 +208,7 @@ public class Mapper implements Serializable {
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
         
-        rdfs.write().save("/user/hdfs/rdfs.rdf");
+        rdfs.write().save(configObject.getDatapath());
         //System.out.println(rdfDataset.collectAsList());
     }
 
