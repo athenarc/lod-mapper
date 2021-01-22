@@ -13,18 +13,19 @@ public class BroadcastVars implements Serializable {
 	private List<String> columns;
 	private String propertyMap;
 	private String valueMap;
-	
+	private String idMap;
 	public BroadcastVars(List<String> columns) {
 		// TODO Auto-generated constructor stub
 		this.columns = columns;
 	}
 
 	
-	public BroadcastVars(List<String> columns, String propertyMap, String valueMap) {
+	public BroadcastVars(List<String> columns, String propertyMap, String valueMap, String idMap) {
 		super();
 		this.columns = columns;
 		this.propertyMap = propertyMap;
 		this.valueMap = valueMap;
+		this.idMap = idMap;
 	}
 
 
@@ -50,6 +51,16 @@ public class BroadcastVars implements Serializable {
 
 	public void setValueMap(String valueMap) {
 		this.valueMap = valueMap;
+	}
+
+
+	public String getIdMap() {
+		return idMap;
+	}
+
+
+	public void setIdMap(String idMap) {
+		this.idMap = idMap;
 	}
 	
 	

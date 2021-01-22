@@ -15,6 +15,7 @@ public class ConfigObject implements Serializable{
 	protected String query;
 	protected String propertyMap;
 	protected String valueMap;
+	protected String idMap;
 	protected Integer dataset;
 	protected HashMap<String, String> mappings;
 	
@@ -56,6 +57,12 @@ public class ConfigObject implements Serializable{
 	}
 	public void setValueMap(String valueMap) {
 		this.valueMap = valueMap;
+	}
+	public String getIdMap() {
+		return idMap;
+	}
+	public void setIdMap(String idMap) {
+		this.idMap = idMap;
 	}
 	
 }

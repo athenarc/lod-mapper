@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
@@ -24,6 +25,7 @@ import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
 import org.imsi.lod_mapper.model.Organisation;
 import org.imsi.lod_mapper.model.RDF;
+import org.imsi.lod_mapper.model.SingleRDF;
 import org.apache.spark.sql.SparkSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -162,7 +164,7 @@ public class Mapper implements Serializable {
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
         Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext()
-        		.broadcast(new BroadcastVars(columns, configObject.getPropertyMap(), configObject.getValueMap()), classTagBroadcastVars);
+        		.broadcast(new BroadcastVars(columns, configObject.getPropertyMap(), configObject.getValueMap(), configObject.getIdMap()), classTagBroadcastVars);
 
         //Dataset<Organisation> orgRecords = groupedRecords.as(Encoders.bean(Organisation.class));
 
@@ -172,6 +174,8 @@ public class Mapper implements Serializable {
         	List<String> columnsI = broadcastColumns.getValue().getColumns();
         	String propertyVal = broadcastColumns.getValue().getPropertyMap();
         	String valueVal = broadcastColumns.getValue().getValueMap();
+        	String idVal = broadcastColumns.getValue().getIdMap();
+
         	String rowId = row.get(0).toString();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
@@ -180,14 +184,23 @@ public class Mapper implements Serializable {
 		        		 for(int j = 0; j < col.size(); j++) {
 		        			 String val = col.get(j);
 		        			 val = val.contains("NULL") ? "NULL" : valueVal + val;
-		        			 RDF rdf = new RDF(rowId, propertyVal + columns.get(i), val);
+		        			 RDF rdf = new RDF(idVal + rowId, propertyVal + columns.get(i), val);
 		        			 rdfs.add(rdf);
 		        		 }
 	        	}
         	}
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
-        rdfDataset.show(200, false);
+        
+        Dataset<SingleRDF> rdfs = rdfDataset.map((MapFunction<RDF, SingleRDF>) row -> {
+        	String rid = row.getId();
+        	String property = row.getProperty();
+        	String value = row.getValue();
+        	SingleRDF singleRDF = new SingleRDF(rid, property, value);
+        	return singleRDF;
+        }, Encoders.bean(SingleRDF.class));
+        
+        rdfs.write().save("/user/hdfs/rdfs.rdf");
         //System.out.println(rdfDataset.collectAsList());
     }
 
