@@ -19,6 +19,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession.Builder;
+import org.apache.spark.sql.types.DataTypes;
 import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
 import org.imsi.lod_mapper.model.Organisation;
@@ -55,7 +56,8 @@ public class Mapper implements Serializable {
         switch(configObject.getDataset()) {
         	case(1):
         		//datasource
-        		groupedRecords = records.groupBy(col("id")).agg(
+        		groupedRecords = records.withColumn("versioning", col("versioning").cast(DataTypes.StringType))
+        				.groupBy(col("id")).agg(
                 		(collect_set(col("originalid"))).alias("originalid"),
                 		(collect_set(col("englishname"))).alias("englishname"),
                 		(collect_set(col("officialname"))).alias("officialname"),
@@ -155,7 +157,7 @@ public class Mapper implements Serializable {
         		break;
 
         }
-        
+        System.out.println(groupedRecords.dtypes());
         groupedRecords.show(false);
         List<String> columns = Arrays.asList(groupedRecords.columns());
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
@@ -173,6 +175,7 @@ public class Mapper implements Serializable {
         		 List<String> col = row.getList(i);
         		 if(col != null)
 	        		 for(int j = 0; j < col.size(); j++) {
+	        			 
 	        			 RDF rdf = new RDF(rowId, columns.get(i), col.get(j));
 	        			 rdfs.add(rdf);
 	        		 }
