@@ -3,6 +3,7 @@ package org.imsi.lod_mapper;
 import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.flatten;
 import static org.apache.spark.sql.functions.collect_set;
+import static org.apache.spark.sql.functions.collect_list;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,9 +102,9 @@ public class Mapper implements Serializable {
 		        flatten(collect_set(col("pid"))).alias("pid"),
 		        collect_set(col("websiteurl")).alias("websiteurl"),
 		        collect_set(col("logourl")).alias("logourl"),
-		        collect_set(col("target")).alias("target"),
+		        collect_list(col("target")).alias("target"),
 		        collect_set(col("reltype")).alias("reltype"),
-		        collect_set(col("subreltype")).alias("subreltype"));
+		        collect_list(col("subreltype")).alias("subreltype"));
         
         Dataset<Row> groupedRecordsPrj = prjRecords.withColumn("fundedamount", col("fundedamount").cast(DataTypes.StringType))
         		.withColumn("totalcost", col("totalcost").cast(DataTypes.StringType))
@@ -132,9 +133,9 @@ public class Mapper implements Serializable {
         		collect_set(col("totalcost")).alias("totalcost"),
         		collect_set(col("summary")).alias("summary"),
         		collect_set(col("startdate")).alias("startdate"),
-        		collect_set(col("target")).alias("target"),
+        		collect_list(col("target")).alias("target"),
         		collect_set(col("reltype")).alias("reltype"),
-        		collect_set(col("subreltype")).alias("subreltype"));
+        		collect_list(col("subreltype")).alias("subreltype"));
         
         Dataset<Row> groupedRecordsRes = resRecords.groupBy(col("id")).agg(
         		collect_set(col("originalid")).alias("originalid"),
@@ -154,9 +155,9 @@ public class Mapper implements Serializable {
         		collect_set(col("embargoenddate")).alias("embargoenddate"),
         		collect_set(col("resourcetype")).alias("resourcetype"),
         		flatten(collect_set(col("externalreference"))).alias("externalreference") ,
-        		collect_set(col("target")).alias("target"),
+        		collect_list(col("target")).alias("target"),
         		collect_set(col("reltype")).alias("reltype"),
-        		collect_set(col("subreltype")).alias("subreltype"));
+        		collect_list(col("subreltype")).alias("subreltype"));
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
         List<String> columnsOrg = Arrays.asList(groupedRecordsOrg.columns());
         List<String> columnsPrj = Arrays.asList(groupedRecordsPrj.columns());
@@ -184,18 +185,33 @@ public class Mapper implements Serializable {
         	String idVal = broadcastColumns.getValue().getIdMap();
 
         	String rowId = row.get(0).toString();
+        	List<String> target = new ArrayList<>();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
 	        		 List<String> col = row.getList(i);
-	        		 if(col != null)
-		        		 for(int j = 0; j < col.size(); j++) {
-		        			 String val = col.get(j);
-		        			 if(val.contains("NULL")) continue;
-		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
-		        			 else val = '"' + val + '"';
-		        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + columnsI.get(i), val);
-		        			 rdfs.add(rdf);
-		        		 }
+	        		 String colName = columnsI.get(i);
+	        		 if(colName.contentEquals("target")) {
+	        			 if(!col.isEmpty()) target = col;
+	        		 }
+	        		 else if(colName.contentEquals("subreltype")) {
+	        			 if(col != null)
+			        		 for(int j = 0; j < target.size(); j++) {
+			        			 String val = col.get(j);
+			        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, target.get(j));
+			        			 rdfs.add(rdf);
+			        		 }
+	        		 }
+	        		 else {
+		        		 if(col != null)
+			        		 for(int j = 0; j < col.size(); j++) {
+			        			 String val = col.get(j);
+			        			 if(val.contains("NULL")) continue;
+			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
+			        			 else val = '"' + val + '"';
+			        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + columnsI.get(i), val);
+			        			 rdfs.add(rdf);
+			        		 }
+	        		 }
 	        	}
         	}
             return rdfs.iterator();
@@ -211,18 +227,33 @@ public class Mapper implements Serializable {
         	String idVal = broadcastColumns.getValue().getIdMap();
 
         	String rowId = row.get(0).toString();
+        	List<String> target = new ArrayList<>();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
 	        		 List<String> col = row.getList(i);
-	        		 if(col != null)
-		        		 for(int j = 0; j < col.size(); j++) {
-		        			 String val = col.get(j);
-		        			 if(val.contains("NULL")) continue;
-		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
-		        			 else val = '"' + val + '"';
-		        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + columnsI.get(i), val);
-		        			 rdfs.add(rdf);
-		        		 }
+	        		 String colName = columnsI.get(i);
+	        		 if(colName.contentEquals("target")) {
+	        			 if(!col.isEmpty()) target = col;
+	        		 }
+	        		 else if(colName.contentEquals("subreltype")) {
+	        			 if(col != null)
+			        		 for(int j = 0; j < target.size(); j++) {
+			        			 String val = col.get(j);
+			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, target.get(j));
+			        			 rdfs.add(rdf);
+			        		 }
+	        		 }
+	        		 else {
+		        		 if(col != null)
+			        		 for(int j = 0; j < col.size(); j++) {
+			        			 String val = col.get(j);
+			        			 if(val.contains("NULL")) continue;
+			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
+			        			 else val = '"' + val + '"';
+			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + columnsI.get(i), val);
+			        			 rdfs.add(rdf);
+			        		 }
+	        		 }
 	        	}
         	}
             return rdfs.iterator();
@@ -239,18 +270,33 @@ public class Mapper implements Serializable {
         	String idVal = broadcastColumns.getValue().getIdMap();
 
         	String rowId = row.get(0).toString();
+        	List<String> target = new ArrayList<>();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
 	        		 List<String> col = row.getList(i);
-	        		 if(col != null)
-		        		 for(int j = 0; j < col.size(); j++) {
-		        			 String val = col.get(j);
-		        			 if(val.contains("NULL")) continue;
-		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
-		        			 else val = '"' + val + '"';
-		        			 RDF rdf = new RDF(idVal + "project/"+ rowId, propertyVal + columnsI.get(i), val);
-		        			 rdfs.add(rdf);
-		        		 }
+	        		 String colName = columnsI.get(i);
+	        		 if(colName.contentEquals("target")) {
+	        			 if(!col.isEmpty()) target = col;
+	        		 }
+	        		 else if(colName.contentEquals("subreltype")) {
+	        			 if(col != null)
+			        		 for(int j = 0; j < target.size(); j++) {
+			        			 String val = col.get(j);
+			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, target.get(j));
+			        			 rdfs.add(rdf);
+			        		 }
+	        		 }
+	        		 else {
+		        		 if(col != null)
+			        		 for(int j = 0; j < col.size(); j++) {
+			        			 String val = col.get(j);
+			        			 if(val.contains("NULL")) continue;
+			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
+			        			 else val = '"' + val + '"';
+			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + columnsI.get(i), val);
+			        			 rdfs.add(rdf);
+			        		 }
+	        		 }
 	        	}
         	}
             return rdfs.iterator();
@@ -266,18 +312,33 @@ public class Mapper implements Serializable {
         	String idVal = broadcastColumns.getValue().getIdMap();
 
         	String rowId = row.get(0).toString();
+        	List<String> target = new ArrayList<>();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
 	        		 List<String> col = row.getList(i);
-	        		 if(col != null)
-		        		 for(int j = 0; j < col.size(); j++) {
-		        			 String val = col.get(j);
-		        			 if(val.contains("NULL")) continue;
-		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
-		        			 else val = '"' + val + '"';
-		        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + columnsI.get(i), val);
-		        			 rdfs.add(rdf);
-		        		 }
+	        		 String colName = columnsI.get(i);
+	        		 if(colName.contentEquals("target")) {
+	        			 if(!col.isEmpty()) target = col;
+	        		 }
+	        		 else if(colName.contentEquals("subreltype")) {
+	        			 if(col != null)
+			        		 for(int j = 0; j < target.size(); j++) {
+			        			 String val = col.get(j);
+			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, target.get(j));
+			        			 rdfs.add(rdf);
+			        		 }
+	        		 }
+	        		 else {
+		        		 if(col != null)
+			        		 for(int j = 0; j < col.size(); j++) {
+			        			 String val = col.get(j);
+			        			 if(val.contains("NULL")) continue;
+			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
+			        			 else val = '"' + val + '"';
+			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + columnsI.get(i), val);
+			        			 rdfs.add(rdf);
+			        		 }
+	        		 }
 	        	}
         	}
             return rdfs.iterator();
