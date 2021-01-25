@@ -105,7 +105,9 @@ public class Mapper implements Serializable {
 		        collect_set(col("reltype")).alias("reltype"),
 		        collect_set(col("subreltype")).alias("subreltype"));
         
-        Dataset<Row> groupedRecordsPrj = prjRecords.groupBy(col("id")).agg(
+        Dataset<Row> groupedRecordsPrj = prjRecords.withColumn("fundedamount", col("fundedamount").cast(DataTypes.StringType))
+        		.withColumn("totalcost", col("totalcost").cast(DataTypes.StringType))
+        		.groupBy(col("id")).agg(
         		collect_set(col("acronym")).alias("acronym"),
         		collect_set(col("callidentifier")).alias("callidentifier"),
         		collect_set(col("contracttype")).alias("contracttype"),
