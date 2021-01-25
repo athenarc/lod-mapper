@@ -197,6 +197,7 @@ public class Mapper implements Serializable {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
+			        			 if(val.contains("NULL")) continue;
 			        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
@@ -242,6 +243,7 @@ public class Mapper implements Serializable {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
+			        			 if(val.contains("NULL")) continue;
 			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
@@ -288,6 +290,7 @@ public class Mapper implements Serializable {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
+			        			 if(val.contains("NULL")) continue;
 			        			 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + val, target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
@@ -333,6 +336,7 @@ public class Mapper implements Serializable {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
+			        			 if(val.contains("NULL")) continue;
 			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
