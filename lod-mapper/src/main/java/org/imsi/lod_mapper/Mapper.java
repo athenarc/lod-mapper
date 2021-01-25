@@ -191,7 +191,7 @@ public class Mapper implements Serializable {
 		        			 if(val.contains("NULL")) continue;
 		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 		        			 else val = '"' + val + '"';
-		        			 RDF rdf = new RDF(idVal + rowId, propertyVal + columnsDS.get(i), val);
+		        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + columnsDS.get(i), val);
 		        			 rdfs.add(rdf);
 		        		 }
 	        	}
@@ -218,7 +218,7 @@ public class Mapper implements Serializable {
 		        			 if(val.contains("NULL")) continue;
 		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 		        			 else val = '"' + val + '"';
-		        			 RDF rdf = new RDF(idVal + rowId, propertyVal + columnsDS.get(i), val);
+		        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + columnsDS.get(i), val);
 		        			 rdfs.add(rdf);
 		        		 }
 	        	}
@@ -246,7 +246,7 @@ public class Mapper implements Serializable {
 		        			 if(val.contains("NULL")) continue;
 		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 		        			 else val = '"' + val + '"';
-		        			 RDF rdf = new RDF(idVal + rowId, propertyVal + columnsDS.get(i), val);
+		        			 RDF rdf = new RDF(idVal + "project/"+ rowId, propertyVal + columnsDS.get(i), val);
 		        			 rdfs.add(rdf);
 		        		 }
 	        	}
@@ -273,7 +273,7 @@ public class Mapper implements Serializable {
 		        			 if(val.contains("NULL")) continue;
 		        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 		        			 else val = '"' + val + '"';
-		        			 RDF rdf = new RDF(idVal + rowId, propertyVal + columnsDS.get(i), val);
+		        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + columnsDS.get(i), val);
 		        			 rdfs.add(rdf);
 		        		 }
 	        	}
