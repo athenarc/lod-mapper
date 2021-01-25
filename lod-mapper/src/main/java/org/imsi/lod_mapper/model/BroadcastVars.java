@@ -10,31 +10,26 @@ public class BroadcastVars implements Serializable {
 	 */
 	private static final long serialVersionUID = -530968049932378342L;
 	
-	private List<String> columns;
+	private List<String> columnsDS;
+	private List<String> columnsOrg;
+	private List<String> columnsPrj;
+	private List<String> columnsRes;
+
 	private String propertyMap;
 	private String valueMap;
 	private String idMap;
-	public BroadcastVars(List<String> columns) {
-		// TODO Auto-generated constructor stub
-		this.columns = columns;
-	}
-
 	
-	public BroadcastVars(List<String> columns, String propertyMap, String valueMap, String idMap) {
+
+	public BroadcastVars(List<String> columnsDS, List<String> columnsOrg, List<String> columnsPrj,
+			List<String> columnsRes, String propertyMap, String valueMap, String idMap) {
 		super();
-		this.columns = columns;
+		this.columnsDS = columnsDS;
+		this.columnsOrg = columnsOrg;
+		this.columnsPrj = columnsPrj;
+		this.columnsRes = columnsRes;
 		this.propertyMap = propertyMap;
 		this.valueMap = valueMap;
 		this.idMap = idMap;
-	}
-
-
-	public List<String> getColumns() {
-		return columns;
-	}
-
-	public void setColumns(List<String> columns) {
-		this.columns = columns;
 	}
 
 	public String getPropertyMap() {
@@ -61,6 +56,26 @@ public class BroadcastVars implements Serializable {
 
 	public void setIdMap(String idMap) {
 		this.idMap = idMap;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public List<String> getColumnsDS() {
+		return columnsDS;
+	}
+
+	public List<String> getColumnsOrg() {
+		return columnsOrg;
+	}
+
+	public List<String> getColumnsPrj() {
+		return columnsPrj;
+	}
+
+	public List<String> getColumnsRes() {
+		return columnsRes;
 	}
 	
 	

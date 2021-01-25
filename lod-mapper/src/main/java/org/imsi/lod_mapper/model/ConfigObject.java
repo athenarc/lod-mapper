@@ -12,7 +12,11 @@ public class ConfigObject implements Serializable{
 	protected String warehouseLocation;
 	protected String dbName;
 	protected String appName;
-	protected String query;
+	protected String queryDS;
+	protected String queryOrg;
+	protected String queryPrj;
+	protected String queryRes;
+
 	protected String propertyMap;
 	protected String valueMap;
 	protected String idMap;
@@ -37,12 +41,6 @@ public class ConfigObject implements Serializable{
 	}
 	public void setAppName(String appName) {
 		this.appName = appName;
-	}
-	public String getQuery() {
-		return query;
-	}
-	public void setQuery(String query) {
-		this.query = query;
 	}
 	public String getPropertyMap() {
 		return propertyMap;
@@ -71,5 +69,28 @@ public class ConfigObject implements Serializable{
 	public void setDatapath(String datapath) {
 		this.datapath = datapath;
 	}
-	
+	public String getQueryDS() {
+		return queryDS;
+	}
+	public void setQueryDS(String queryDS) {
+		this.queryDS = queryDS;
+	}
+	public String getQueryOrg() {
+		return queryOrg;
+	}
+	public void setQueryOrg(String queryOrg) {
+		this.queryOrg = queryOrg;
+	}
+	public String getQueryPrj() {
+		return queryPrj;
+	}
+	public void setQueryPrj(String queryPrj) {
+		this.queryPrj = queryPrj;
+	}
+	public String getQueryRes() {
+		return queryRes;
+	}
+	public void setQueryRes(String queryRes) {
+		this.queryRes = queryRes;
+	}
 }
