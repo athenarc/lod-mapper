@@ -201,6 +201,9 @@ public class Mapper implements Serializable {
 			        			 rdfs.add(rdf);
 			        		 }
 	        		 }
+	        		 else if(colName.contentEquals("reltype")) {
+	        			 continue;
+	        		 }
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
@@ -243,6 +246,9 @@ public class Mapper implements Serializable {
 			        			 rdfs.add(rdf);
 			        		 }
 	        		 }
+	        		 else if(colName.contentEquals("reltype")) {
+	        			 continue;
+	        		 }
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
@@ -282,9 +288,12 @@ public class Mapper implements Serializable {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
-			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, target.get(j));
+			        			 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + val, target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
+	        		 }
+	        		 else if(colName.contentEquals("reltype")) {
+	        			 continue;
 	        		 }
 	        		 else {
 		        		 if(col != null)
@@ -293,7 +302,7 @@ public class Mapper implements Serializable {
 			        			 if(val.contains("NULL")) continue;
 			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 			        			 else val = '"' + val + '"';
-			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + columnsI.get(i), val);
+			        			 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + columnsI.get(i), val);
 			        			 rdfs.add(rdf);
 			        		 }
 	        		 }
@@ -327,6 +336,9 @@ public class Mapper implements Serializable {
 			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
+	        		 }
+	        		 else if(colName.contentEquals("reltype")) {
+	        			 continue;
 	        		 }
 	        		 else {
 		        		 if(col != null)
