@@ -86,9 +86,9 @@ public class Mapper implements Serializable {
         		(collect_set(col("accessinfopackage"))).alias("accessinfopackage"),
         		(collect_set(col("namespaceprefix"))).alias("namespaceprefix"),
         		(collect_set(col("versioning"))).alias("versioning"),
-        		(collect_set(col("target"))).alias("target"),
+        		(collect_list(col("target"))).alias("target"),
         		(collect_set(col("reltype"))).alias("reltype"),
-        		(collect_set(col("subreltype"))).alias("subreltype"));
+        		(collect_list(col("subreltype"))).alias("subreltype"));
         
         Dataset<Row> groupedRecordsOrg = orgRecords.groupBy(col("id")).agg(
 		        collect_set(col("originalid")).alias("originalid"),
@@ -339,7 +339,7 @@ public class Mapper implements Serializable {
 	        		 }
 	        		 else if(colName.contentEquals("reltype")) {
 	        			 continue;
-	        		 }
+	        		 } 
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
