@@ -177,7 +177,6 @@ public class Mapper implements Serializable {
         
         /* DS */
         Dataset<RDF> rdfDatasetDS = groupedRecordsDS.flatMap((FlatMapFunction<Row, RDF>) row -> {
-        	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
         	List<String> columnsI = broadcastColumns.getValue().getColumnsDS();
         	String propertyVal = broadcastColumns.getValue().getPropertyMap();
@@ -230,7 +229,6 @@ public class Mapper implements Serializable {
         
         /* ORG */
         Dataset<RDF> rdfDatasetOrg = groupedRecordsOrg.flatMap((FlatMapFunction<Row, RDF>) row -> {
-        	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
         	List<String> columnsI = broadcastColumns.getValue().getColumnsOrg();
         	String propertyVal = broadcastColumns.getValue().getPropertyMap();
@@ -284,7 +282,6 @@ public class Mapper implements Serializable {
         
         /* PRJ */
         Dataset<RDF> rdfDatasetPrj = groupedRecordsPrj.flatMap((FlatMapFunction<Row, RDF>) row -> {
-        	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
         	List<String> columnsI = broadcastColumns.getValue().getColumnsPrj();
         	String propertyVal = broadcastColumns.getValue().getPropertyMap();
@@ -337,7 +334,6 @@ public class Mapper implements Serializable {
        
         /* RES */
         Dataset<RDF> rdfDatasetRes = groupedRecordsPrj.flatMap((FlatMapFunction<Row, RDF>) row -> {
-        	System.out.println(row);
         	List<RDF> rdfs = new ArrayList<>();
         	List<String> columnsI = broadcastColumns.getValue().getColumnsRes();
         	String propertyVal = broadcastColumns.getValue().getPropertyMap();
