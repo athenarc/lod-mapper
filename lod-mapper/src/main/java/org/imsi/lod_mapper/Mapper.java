@@ -87,7 +87,7 @@ public class Mapper implements Serializable {
         		(collect_set(col("namespaceprefix"))).alias("namespaceprefix"),
         		(collect_set(col("versioning"))).alias("versioning"),
         		(collect_list(col("target"))).alias("target"),
-        		(collect_set(col("reltype"))).alias("reltype"),
+        		(collect_list(col("reltype"))).alias("reltype"),
         		(collect_list(col("subreltype"))).alias("subreltype"));
         
         Dataset<Row> groupedRecordsOrg = orgRecords.groupBy(col("id")).agg(
@@ -103,7 +103,7 @@ public class Mapper implements Serializable {
 		        collect_set(col("websiteurl")).alias("websiteurl"),
 		        collect_set(col("logourl")).alias("logourl"),
 		        collect_list(col("target")).alias("target"),
-		        collect_set(col("reltype")).alias("reltype"),
+		        collect_list(col("reltype")).alias("reltype"),
 		        collect_list(col("subreltype")).alias("subreltype"));
         
         Dataset<Row> groupedRecordsPrj = prjRecords.withColumn("fundedamount", col("fundedamount").cast(DataTypes.StringType))
@@ -134,7 +134,7 @@ public class Mapper implements Serializable {
         		collect_set(col("summary")).alias("summary"),
         		collect_set(col("startdate")).alias("startdate"),
         		collect_list(col("target")).alias("target"),
-        		collect_set(col("reltype")).alias("reltype"),
+        		collect_list(col("reltype")).alias("reltype"),
         		collect_list(col("subreltype")).alias("subreltype"));
         
         Dataset<Row> groupedRecordsRes = resRecords.groupBy(col("id")).agg(
@@ -156,7 +156,7 @@ public class Mapper implements Serializable {
         		collect_set(col("resourcetype")).alias("resourcetype"),
         		flatten(collect_set(col("externalreference"))).alias("externalreference") ,
         		collect_list(col("target")).alias("target"),
-        		collect_set(col("reltype")).alias("reltype"),
+        		collect_list(col("reltype")).alias("reltype"),
         		collect_list(col("subreltype")).alias("subreltype"));
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
         List<String> columnsOrg = Arrays.asList(groupedRecordsOrg.columns());
