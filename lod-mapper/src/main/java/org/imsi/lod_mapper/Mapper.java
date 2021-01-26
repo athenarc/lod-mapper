@@ -208,7 +208,7 @@ public class Mapper implements Serializable {
 			        			 else if (rel.contains("organisation")) relVal += "organisation/";
 			        			 else if (rel.contains("project")) relVal += "project/";
 
-			        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, relVal + target.get(j));
+			        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
 			        			 rdfs.add(rdf);
 			        		 }
 	        		 }
@@ -261,7 +261,7 @@ public class Mapper implements Serializable {
 			        			 else if (rel.contains("datasource")) relVal += "datasource/";
 			        			 else if (rel.contains("project")) relVal += "project/";
 
-			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, relVal + target.get(j));
+			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
 			        			 rdfs.add(rdf);
 			        		 }
 	        		 }
@@ -315,7 +315,7 @@ public class Mapper implements Serializable {
 			        			 else if (rel.contains("organisation")) relVal += "organisation/";
 			        			 else if (rel.contains("datasource")) relVal += "datasource/";
 
-			        			 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + val, relVal + target.get(j));
+			        			 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
 			        			 rdfs.add(rdf);
 			        		 }
 	        		 }
@@ -364,11 +364,12 @@ public class Mapper implements Serializable {
 			        			 if(val.contains("NULL")) continue;
 			        			 String relVal = "<http://lod.openaire.eu/data/";
 			        			 String rel = relType.get(j).toLowerCase();
+			        			 System.out.println(rel);
 			        			 if(rel.contains("datasource")) relVal += "datasource/";
 			        			 else if (rel.contains("organisation")) relVal += "organisation/";
 			        			 else if (rel.contains("project")) relVal += "project/";
 
-			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, relVal + target.get(j));
+			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
 			        			 rdfs.add(rdf);
 			        		 }
 	        		 }
