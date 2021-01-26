@@ -186,6 +186,7 @@ public class Mapper implements Serializable {
 
         	String rowId = row.get(0).toString();
         	List<String> target = new ArrayList<>();
+        	List<String> relType = new ArrayList<>();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
 	        		 List<String> col = row.getList(i);
@@ -193,17 +194,23 @@ public class Mapper implements Serializable {
 	        		 if(colName.contentEquals("target")) {
 	        			 if(!col.isEmpty()) target = col;
 	        		 }
+	        		 else if(colName.contentEquals("reltype")) {
+	        			 if(!col.isEmpty()) relType = col;	 
+	        		 }
 	        		 else if(colName.contentEquals("subreltype")) {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
 			        			 if(val.contains("NULL")) continue;
-			        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, target.get(j));
+			        			 String relVal = "<http://lod.openaire.eu/data/";
+			        			 String rel = relType.get(j).toLowerCase();
+			        			 if(rel.contains("result")) relVal += "result/";
+			        			 else if (rel.contains("organisation")) relVal += "organisation/";
+			        			 else if (rel.contains("project")) relVal += "project/";
+
+			        			 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, relVal + target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
-	        		 }
-	        		 else if(colName.contentEquals("reltype")) {
-	        			 continue;
 	        		 }
 	        		 else {
 		        		 if(col != null)
@@ -232,6 +239,7 @@ public class Mapper implements Serializable {
 
         	String rowId = row.get(0).toString();
         	List<String> target = new ArrayList<>();
+        	List<String> relType = new ArrayList<>();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
 	        		 List<String> col = row.getList(i);
@@ -239,17 +247,23 @@ public class Mapper implements Serializable {
 	        		 if(colName.contentEquals("target")) {
 	        			 if(!col.isEmpty()) target = col;
 	        		 }
+	        		 else if(colName.contentEquals("reltype")) {
+	        			 if(!col.isEmpty()) relType = col;	 
+	        		 }
 	        		 else if(colName.contentEquals("subreltype")) {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
 			        			 if(val.contains("NULL")) continue;
-			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, target.get(j));
+			        			 String relVal = "<http://lod.openaire.eu/data/";
+			        			 String rel = relType.get(j).toLowerCase();
+			        			 if(rel.contains("result")) relVal += "result/";
+			        			 else if (rel.contains("datasource")) relVal += "datasource/";
+			        			 else if (rel.contains("project")) relVal += "project/";
+
+			        			 RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, relVal + target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
-	        		 }
-	        		 else if(colName.contentEquals("reltype")) {
-	        			 continue;
 	        		 }
 	        		 else {
 		        		 if(col != null)
@@ -279,6 +293,7 @@ public class Mapper implements Serializable {
 
         	String rowId = row.get(0).toString();
         	List<String> target = new ArrayList<>();
+        	List<String> relType = new ArrayList<>();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
 	        		 List<String> col = row.getList(i);
@@ -286,17 +301,23 @@ public class Mapper implements Serializable {
 	        		 if(colName.contentEquals("target")) {
 	        			 if(!col.isEmpty()) target = col;
 	        		 }
+	        		 else if(colName.contentEquals("reltype")) {
+	        			 if(!col.isEmpty()) relType = col;	 
+	        		 }
 	        		 else if(colName.contentEquals("subreltype")) {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
 			        			 if(val.contains("NULL")) continue;
-			        			 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + val, target.get(j));
+			        			 String relVal = "<http://lod.openaire.eu/data/";
+			        			 String rel = relType.get(j).toLowerCase();
+			        			 if(rel.contains("result")) relVal += "result/";
+			        			 else if (rel.contains("organisation")) relVal += "organisation/";
+			        			 else if (rel.contains("datasource")) relVal += "datasource/";
+
+			        			 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + val, relVal + target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
-	        		 }
-	        		 else if(colName.contentEquals("reltype")) {
-	        			 continue;
 	        		 }
 	        		 else {
 		        		 if(col != null)
@@ -325,6 +346,7 @@ public class Mapper implements Serializable {
 
         	String rowId = row.get(0).toString();
         	List<String> target = new ArrayList<>();
+        	List<String> relType = new ArrayList<>();
         	if(!rowId.contains("dedup")) {
 	        	for (int i = 1; i < columnsI.size(); i++) {
 	        		 List<String> col = row.getList(i);
@@ -332,18 +354,24 @@ public class Mapper implements Serializable {
 	        		 if(colName.contentEquals("target")) {
 	        			 if(!col.isEmpty()) target = col;
 	        		 }
+	        		 else if(colName.contentEquals("reltype")) {
+	        			 if(!col.isEmpty()) relType = col;	 
+	        		 }
 	        		 else if(colName.contentEquals("subreltype")) {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
 			        			 String val = col.get(j);
 			        			 if(val.contains("NULL")) continue;
-			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, target.get(j));
+			        			 String relVal = "<http://lod.openaire.eu/data/";
+			        			 String rel = relType.get(j).toLowerCase();
+			        			 if(rel.contains("datasource")) relVal += "datasource/";
+			        			 else if (rel.contains("organisation")) relVal += "organisation/";
+			        			 else if (rel.contains("project")) relVal += "project/";
+
+			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, relVal + target.get(j));
 			        			 rdfs.add(rdf);
 			        		 }
 	        		 }
-	        		 else if(colName.contentEquals("reltype")) {
-	        			 continue;
-	        		 } 
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
