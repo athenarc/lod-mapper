@@ -421,12 +421,13 @@ public class Mapper implements Serializable {
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
         fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
-        rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/datasource/");
+        
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
         rdfsDSRDD.unpersist();
         
-        rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/organisation/");
         JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        rdfsOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organisation/");
         rdfsOrgRDD.unpersist();
         
    
