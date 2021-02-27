@@ -24,6 +24,7 @@ import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession.Builder;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.storage.StorageLevel;
 import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
 import org.imsi.lod_mapper.model.Organisation;
@@ -416,10 +417,10 @@ public class Mapper implements Serializable {
         	SingleRDF singleRDF = new SingleRDF(rid, property, value);
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
-        rdfsDS.javaRDD().saveAsTextFile(configObject.getDatapath() + "/datasource/");
-        rdfsOrg.javaRDD().saveAsTextFile(configObject.getDatapath() + "/organisation/");
-        rdfsPrj.javaRDD().saveAsTextFile(configObject.getDatapath() + "/project/");
-        rdfsRes.javaRDD().saveAsTextFile(configObject.getDatapath() + "/result/");
+        rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/datasource/");
+        rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/organisation/");
+        rdfsPrj.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/project/");
+        rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/result/");
 
     }
 
