@@ -355,20 +355,22 @@ public class Mapper implements Serializable {
 	        			 if(!col.isEmpty()) relType = col;	 
 	        		 }
 	        		 else if(colName.contentEquals("subreltype")) {
-	        			 if(col != null)
-			        		 for(int j = 0; j < target.size(); j++) {
-			        			 String val = col.get(j);
-			        			 if(val.contains("NULL")) continue;
-			        			 String relVal = "<http://lod.openaire.eu/data/";
-			        			 String rel = relType.get(j).toLowerCase();
-			        			 System.out.println(rel);
-			        			 if(rel.contains("datasource")) relVal = relVal.concat("datasource/");
-			        			 else if (rel.contains("organisation")) relVal = relVal.concat("organisation/");
-			        			 else if (rel.contains("project")) relVal = relVal.concat("project/");
+	        			 if(col != null && target.size() == relType.size())
+	        				 for(int j = 0; j < target.size(); j++) {
+	        					 String val = col.get(j);
+	        					 if(val.contains("NULL")) continue;
+	        					 String relVal = "<http://lod.openaire.eu/data/";
 
-			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
-			        			 rdfs.add(rdf);
-			        		 }
+	        					 String rel = relType.get(j).toLowerCase();
+	        					 System.out.println(rel);
+	        					 if(rel.contains("datasource")) relVal = relVal.concat("datasource/");
+	        					 else if (rel.contains("organisation")) relVal = relVal.concat("organisation/");
+	        					 else if (rel.contains("project")) relVal = relVal.concat("project/");
+
+	        					 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
+	        					 rdfs.add(rdf);
+
+	        				 }
 	        		 }
 	        		 else {
 		        		 if(col != null)
@@ -418,9 +420,13 @@ public class Mapper implements Serializable {
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
         rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/datasource/");
+        rdfsDS.unpersist();
         rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/organisation/");
+        rdfsOrg.unpersist();
         rdfsPrj.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/project/");
+        rdfsPrj.unpersist();
         rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/result/");
+        rdfsRes.unpersist();
 
     }
 
