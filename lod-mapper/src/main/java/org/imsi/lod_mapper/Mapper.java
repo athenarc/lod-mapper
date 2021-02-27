@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.broadcast.Broadcast;
@@ -35,7 +36,7 @@ import org.apache.spark.sql.SparkSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.apache.hadoop.fs.FileSystem;
 import scala.reflect.ClassTag;
 
 public class Mapper implements Serializable {
@@ -334,7 +335,7 @@ public class Mapper implements Serializable {
         }, Encoders.bean(RDF.class));
        
         /* RES */
-        Dataset<RDF> rdfDatasetRes = groupedRecordsPrj.flatMap((FlatMapFunction<Row, RDF>) row -> {
+        Dataset<RDF> rdfDatasetRes = groupedRecordsRes.flatMap((FlatMapFunction<Row, RDF>) row -> {
         	List<RDF> rdfs = new ArrayList<>();
         	List<String> columnsI = broadcastColumns.getValue().getColumnsRes();
         	String propertyVal = broadcastColumns.getValue().getPropertyMap();
@@ -355,7 +356,7 @@ public class Mapper implements Serializable {
 	        			 if(!col.isEmpty()) relType = col;	 
 	        		 }
 	        		 else if(colName.contentEquals("subreltype")) {
-	        			 if(col != null && target.size() == relType.size())
+	        			 if(col != null)
 	        				 for(int j = 0; j < target.size(); j++) {
 	        					 String val = col.get(j);
 	        					 if(val.contains("NULL")) continue;
@@ -419,14 +420,23 @@ public class Mapper implements Serializable {
         	SingleRDF singleRDF = new SingleRDF(rid, property, value);
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
+        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
         rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/datasource/");
-        rdfsDS.unpersist();
+        JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        rdfsDSRDD.unpersist();
+        
         rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/organisation/");
-        rdfsOrg.unpersist();
-        rdfsPrj.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/project/");
+        JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        rdfsOrgRDD.unpersist();
+        
+   
+        JavaRDD<SingleRDF> rdfsPrjOrg = rdfsPrj.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
         rdfsPrj.unpersist();
-        rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).saveAsTextFile(configObject.getDatapath() + "/result/");
-        rdfsRes.unpersist();
+        
+        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
+        rdfsResOrg.unpersist();
 
     }
 
