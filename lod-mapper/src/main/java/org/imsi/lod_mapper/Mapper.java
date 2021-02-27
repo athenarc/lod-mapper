@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.api.java.JavaRDD;
@@ -201,7 +202,7 @@ public class Mapper implements Serializable {
 	        		 else if(colName.contentEquals("subreltype")) {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
-			        			 String val = col.get(j);
+			        			 String val = col.get(j).toString();
 			        			 if(val.contains("NULL")) continue;
 			        			 String relVal = "<http://lod.openaire.eu/data/";
 			        			 String rel = relType.get(j).toLowerCase();
@@ -216,7 +217,7 @@ public class Mapper implements Serializable {
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
-			        			 String val = col.get(j);
+			        			 String val = col.get(j).toString();
 			        			 if(val.contains("NULL")) continue;
 			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 			        			 else val = '"' + val + '"';
@@ -253,7 +254,7 @@ public class Mapper implements Serializable {
 	        		 else if(colName.contentEquals("subreltype")) {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
-			        			 String val = col.get(j);
+			        			 String val = col.get(j).toString();
 			        			 if(val.contains("NULL")) continue;
 			        			 String relVal = "<http://lod.openaire.eu/data/";
 			        			 String rel = relType.get(j).toLowerCase();
@@ -268,7 +269,7 @@ public class Mapper implements Serializable {
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
-			        			 String val = col.get(j);
+			        			 String val = col.get(j).toString();
 			        			 if(val.contains("NULL")) continue;
 			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 			        			 else val = '"' + val + '"';
@@ -306,7 +307,7 @@ public class Mapper implements Serializable {
 	        		 else if(colName.contentEquals("subreltype")) {
 	        			 if(col != null)
 			        		 for(int j = 0; j < target.size(); j++) {
-			        			 String val = col.get(j);
+			        			 String val = col.get(j).toString();
 			        			 if(val.contains("NULL")) continue;
 			        			 String relVal = "<http://lod.openaire.eu/data/";
 			        			 String rel = relType.get(j).toLowerCase();
@@ -321,7 +322,7 @@ public class Mapper implements Serializable {
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
-			        			 String val = col.get(j);
+			        			 String val = col.get(j).toString();
 			        			 if(val.contains("NULL")) continue;
 			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 			        			 else val = '"' + val + '"';
@@ -358,7 +359,7 @@ public class Mapper implements Serializable {
 	        		 else if(colName.contentEquals("subreltype")) {
 	        			 if(col != null)
 	        				 for(int j = 0; j < target.size(); j++) {
-	        					 String val = col.get(j);
+	        					 String val = col.get(j).toString();
 	        					 if(val.contains("NULL")) continue;
 	        					 String relVal = "<http://lod.openaire.eu/data/";
 
@@ -376,7 +377,7 @@ public class Mapper implements Serializable {
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
-			        			 String val = col.get(j);
+			        			 String val = col.get(j).toString();
 			        			 if(val.contains("NULL")) continue;
 			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
 			        			 else val = '"' + val + '"';
@@ -420,7 +421,6 @@ public class Mapper implements Serializable {
         	SingleRDF singleRDF = new SingleRDF(rid, property, value);
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
-        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
         
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
@@ -438,7 +438,26 @@ public class Mapper implements Serializable {
         JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
         rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
         rdfsResOrg.unpersist();
-
+        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
+        List<FileStatus> files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/datasource/" + "/part*")));
+        for(FileStatus file : files) {
+        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
+        }
+        
+        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/organisation/" + "/part*")));
+        for(FileStatus file : files) {
+        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
+        }
+        
+        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/project/" + "/part*")));
+        for(FileStatus file : files) {
+        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
+        }
+        
+        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/result/" + "/part*")));
+        for(FileStatus file : files) {
+        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
+        }
     }
 
 	private static SparkSession setupSparkSession() {
