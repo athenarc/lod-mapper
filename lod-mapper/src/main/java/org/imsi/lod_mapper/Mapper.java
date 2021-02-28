@@ -2,6 +2,7 @@ package org.imsi.lod_mapper;
 
 import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.flatten;
+import static org.apache.spark.sql.functions.explode;
 import static org.apache.spark.sql.functions.collect_set;
 import static org.apache.spark.sql.functions.collect_list;
 
@@ -148,7 +149,7 @@ public class Mapper implements Serializable {
         		collect_set(col("bestaccessright")).alias("bestaccessright"),
         		collect_set(col("collectedfrom")).alias("collectedfrom"),
         		flatten(collect_set(col("pid"))).alias("pid"),
-        		flatten(collect_set(col("author"))).alias("author"),
+        		explode(collect_set(col("author"))).alias("author"),
         		collect_set(col("resulttype")).alias("resulttype"),
         		collect_set(col("language")).alias("language"),
         		collect_set(col("country")).alias("country"),
