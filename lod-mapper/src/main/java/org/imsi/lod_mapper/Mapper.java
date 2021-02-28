@@ -129,26 +129,26 @@ public class Mapper implements Serializable {
                         collect_list(col("subreltype")).alias("subreltype"));
 
         Dataset<Row> groupedRecordsRes = resRecords.groupBy(col("id")).agg(
-                collect_set(col("originalid")).alias("originalid"),
-                collect_set(col("dateofcollection")).alias("dateofcollection"),
-                collect_set(col("title")).alias("title"),
-                collect_set(col("publisher")).alias("publisher"),
-                collect_set(col("bestaccessright")).alias("bestaccessright"),
-                collect_set(col("collectedfrom")).alias("collectedfrom"),
-                flatten(collect_set(col("pid"))).alias("pid"),
-                flatten(collect_set(col("author"))).alias("author"),
-                collect_set(col("resulttype")).alias("resulttype"),
-                collect_set(col("language")).alias("language"),
-                collect_set(col("country")).alias("country"),
-                flatten(collect_set(col("subject"))).alias("subject"),
-                collect_set(col("description")).alias("description"),
-                collect_set(col("dateofacceptance")).alias("dateofacceptance"),
-                collect_set(col("embargoenddate")).alias("embargoenddate"),
-                collect_set(col("resourcetype")).alias("resourcetype"),
-                flatten(collect_set(col("externalreference"))).alias("externalreference"),
-                collect_list(col("target")).alias("target"),
-                collect_list(col("reltype")).alias("reltype"),
-                collect_list(col("subreltype")).alias("subreltype"));
+                collect_set(col("originalid").cast(DataTypes.StringType)).alias("originalid"),
+                collect_set(col("dateofcollection").cast(DataTypes.StringType)).alias("dateofcollection"),
+                collect_set(col("title").cast(DataTypes.StringType)).alias("title"),
+                collect_set(col("publisher").cast(DataTypes.StringType)).alias("publisher"),
+                collect_set(col("bestaccessright").cast(DataTypes.StringType)).alias("bestaccessright"),
+                collect_set(col("collectedfrom").cast(DataTypes.StringType)).alias("collectedfrom"),
+                flatten(collect_set(col("pid").cast(DataTypes.StringType))).alias("pid"),
+                flatten(collect_set(col("author").cast(DataTypes.StringType))).alias("author"),
+                collect_set(col("resulttype").cast(DataTypes.StringType)).alias("resulttype"),
+                collect_set(col("language").cast(DataTypes.StringType)).alias("language"),
+                collect_set(col("country").cast(DataTypes.StringType)).alias("country"),
+                flatten(collect_set(col("subject").cast(DataTypes.StringType))).alias("subject"),
+                collect_set(col("description").cast(DataTypes.StringType)).alias("description"),
+                collect_set(col("dateofacceptance").cast(DataTypes.StringType)).alias("dateofacceptance"),
+                collect_set(col("embargoenddate").cast(DataTypes.StringType)).alias("embargoenddate"),
+                collect_set(col("resourcetype").cast(DataTypes.StringType)).alias("resourcetype"),
+                flatten(collect_set(col("externalreference").cast(DataTypes.StringType))).alias("externalreference"),
+                collect_list(col("target").cast(DataTypes.StringType)).alias("target"),
+                collect_list(col("reltype").cast(DataTypes.StringType)).alias("reltype"),
+                collect_list(col("subreltype").cast(DataTypes.StringType)).alias("subreltype"));
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
         List<String> columnsOrg = Arrays.asList(groupedRecordsOrg.columns());
         List<String> columnsPrj = Arrays.asList(groupedRecordsPrj.columns());
