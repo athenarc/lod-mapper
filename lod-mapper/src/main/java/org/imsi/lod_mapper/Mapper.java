@@ -128,14 +128,15 @@ public class Mapper implements Serializable {
                         collect_list(col("reltype")).alias("reltype"),
                         collect_list(col("subreltype")).alias("subreltype"));
 
-        Dataset<Row> groupedRecordsRes = resRecords.groupBy(col("id")).agg(
+        Dataset<Row> groupedRecordsRes = resRecords.withColumn("pid", explode(resRecords.col("pid"))).groupBy(col("id")).agg(
                 collect_set(col("originalid").cast(DataTypes.StringType)).alias("originalid"),
                 collect_set(col("dateofcollection").cast(DataTypes.StringType)).alias("dateofcollection"),
                 collect_set(col("title").cast(DataTypes.StringType)).alias("title"),
                 collect_set(col("publisher").cast(DataTypes.StringType)).alias("publisher"),
                 collect_set(col("bestaccessright").cast(DataTypes.StringType)).alias("bestaccessright"),
                 collect_set(col("collectedfrom").cast(DataTypes.StringType)).alias("collectedfrom"),
-                flatten(collect_set(col("pid")).cast(DataTypes.StringType)).alias("pid"),
+//                flatten(collect_set(col("pid")).cast(DataTypes.StringType)).alias("pid"),
+                collect_set(col("pid")).cast(DataTypes.StringType).alias("pid"),
                 flatten(collect_set(col("author")).cast(DataTypes.StringType)).alias("author"),
                 collect_set(col("resulttype").cast(DataTypes.StringType)).alias("resulttype"),
                 collect_set(col("language").cast(DataTypes.StringType)).alias("language"),
