@@ -440,26 +440,26 @@ public class Mapper implements Serializable {
         JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
         rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
         rdfsResOrg.unpersist();
-        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
-        List<FileStatus> files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/datasource/" + "/part*")));
-        for(FileStatus file : files) {
-        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
-        }
-        
-        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/organisation/" + "/part*")));
-        for(FileStatus file : files) {
-        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
-        }
-        
-        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/project/" + "/part*")));
-        for(FileStatus file : files) {
-        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
-        }
-        
-        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/result/" + "/part*")));
-        for(FileStatus file : files) {
-        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
-        }
+//        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
+//        List<FileStatus> files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/datasource/" + "/part*")));
+//        for(FileStatus file : files) {
+//        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
+//        }
+//        
+//        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/organisation/" + "/part*")));
+//        for(FileStatus file : files) {
+//        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
+//        }
+//        
+//        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/project/" + "/part*")));
+//        for(FileStatus file : files) {
+//        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
+//        }
+//        
+//        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/result/" + "/part*")));
+//        for(FileStatus file : files) {
+//        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
+//        }
     }
 
 	private static SparkSession setupSparkSession() {
