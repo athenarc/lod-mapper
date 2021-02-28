@@ -128,7 +128,11 @@ public class Mapper implements Serializable {
                         collect_list(col("reltype")).alias("reltype"),
                         collect_list(col("subreltype")).alias("subreltype"));
 
-        Dataset<Row> groupedRecordsRes = resRecords.withColumn("pid", explode(resRecords.col("pid"))).groupBy(col("id")).agg(
+        Dataset<Row> groupedRecordsRes = resRecords.withColumn("pid", explode(resRecords.col("pid")))
+                .withColumn("author", explode(resRecords.col("author")))
+                .withColumn("subject", explode(resRecords.col("subject")))
+                .withColumn("externalreference", explode(resRecords.col("externalreference")))
+                .groupBy(col("id")).agg(
                 collect_set(col("originalid").cast(DataTypes.StringType)).alias("originalid"),
                 collect_set(col("dateofcollection").cast(DataTypes.StringType)).alias("dateofcollection"),
                 collect_set(col("title").cast(DataTypes.StringType)).alias("title"),
@@ -137,16 +141,18 @@ public class Mapper implements Serializable {
                 collect_set(col("collectedfrom").cast(DataTypes.StringType)).alias("collectedfrom"),
 //                flatten(collect_set(col("pid")).cast(DataTypes.StringType)).alias("pid"),
                 collect_set(col("pid")).cast(DataTypes.StringType).alias("pid"),
-                flatten(collect_set(col("author")).cast(DataTypes.StringType)).alias("author"),
+//                flatten(collect_set(col("author")).cast(DataTypes.StringType)).alias("author"),collect_set(col("author")).cast(DataTypes.StringType).alias("author"),
                 collect_set(col("resulttype").cast(DataTypes.StringType)).alias("resulttype"),
                 collect_set(col("language").cast(DataTypes.StringType)).alias("language"),
                 collect_set(col("country").cast(DataTypes.StringType)).alias("country"),
-                flatten(collect_set(col("subject")).cast(DataTypes.StringType)).alias("subject"),
+//                flatten(collect_set(col("subject")).cast(DataTypes.StringType)).alias("subject"),
+                        collect_set(col("subject")).cast(DataTypes.StringType).alias("subject"),
                 collect_set(col("description").cast(DataTypes.StringType)).alias("description"),
                 collect_set(col("dateofacceptance").cast(DataTypes.StringType)).alias("dateofacceptance"),
                 collect_set(col("embargoenddate").cast(DataTypes.StringType)).alias("embargoenddate"),
                 collect_set(col("resourcetype").cast(DataTypes.StringType)).alias("resourcetype"),
-                flatten(collect_set(col("externalreference")).cast(DataTypes.StringType)).alias("externalreference"),
+//                flatten(collect_set(col("externalreference")).cast(DataTypes.StringType)).alias("externalreference"),
+                        collect_set(col("externalreference")).cast(DataTypes.StringType).alias("externalreference"),
                 collect_list(col("target").cast(DataTypes.StringType)).alias("target"),
                 collect_list(col("reltype").cast(DataTypes.StringType)).alias("reltype"),
                 collect_list(col("subreltype").cast(DataTypes.StringType)).alias("subreltype"));
