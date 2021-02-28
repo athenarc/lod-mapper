@@ -364,7 +364,7 @@ public class Mapper implements Serializable {
                 }
             }
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class));
+        }, Encoders.bean(RDF.class)).persist(StorageLevel.MEMORY_AND_DISK_SER());;
         // Create a single dataset of RDFS.
         Dataset<SingleRDF> rdfsDS = rdfDatasetDS.map((MapFunction<RDF, SingleRDF>) row -> {
             String rid = row.getId();
