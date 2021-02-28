@@ -379,12 +379,17 @@ public class Mapper implements Serializable {
 	        		 else {
 		        		 if(col != null)
 			        		 for(int j = 0; j < col.size(); j++) {
-			        			 String val = col.get(j).toString();
-			        			 if(val.contains("NULL")) continue;
-			        			 if(val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
-			        			 else val = '"' + val + '"';
-			        			 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + columnsI.get(i), val);
-			        			 rdfs.add(rdf);
+			        		 	try {
+									String val = col.get(j).toString();
+									if (val.contains("NULL")) continue;
+									if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
+									else val = '"' + val + '"';
+									RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + columnsI.get(i), val);
+									rdfs.add(rdf);
+								}catch (Exception e){
+			        		 		System.err.println(e.getMessage());
+			        		 		continue;
+								}
 			        		 }
 	        		 }
 	        	}
