@@ -141,7 +141,8 @@ public class Mapper implements Serializable {
         		collect_list(col("reltype")).alias("reltype"),
         		collect_list(col("subreltype")).alias("subreltype"));
         
-        Dataset<Row> groupedRecordsRes = resRecords.groupBy(col("id")).agg(
+        Dataset<Row> groupedRecordsRes = resRecords.withColumn("author", explode(col("author")))
+        		.groupBy(col("id")).agg(
         		collect_set(col("originalid")).alias("originalid"),
         		collect_set(col("dateofcollection")).alias("dateofcollection"),
         		collect_set(col("title")).alias("title"),
@@ -149,7 +150,7 @@ public class Mapper implements Serializable {
         		collect_set(col("bestaccessright")).alias("bestaccessright"),
         		collect_set(col("collectedfrom")).alias("collectedfrom"),
         		flatten(collect_set(col("pid"))).alias("pid"),
-        		explode(collect_set(col("author"))).alias("author"),
+        		col("author").alias("author"),
         		collect_set(col("resulttype")).alias("resulttype"),
         		collect_set(col("language")).alias("language"),
         		collect_set(col("country")).alias("country"),
