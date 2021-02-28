@@ -374,6 +374,7 @@ public class Mapper implements Serializable {
             return singleRDF;
         }, Encoders.bean(SingleRDF.class));
 
+
         Dataset<SingleRDF> rdfsOrg = rdfDatasetOrg.map((MapFunction<RDF, SingleRDF>) row -> {
             String rid = row.getId();
             String property = row.getProperty();
@@ -397,6 +398,7 @@ public class Mapper implements Serializable {
             SingleRDF singleRDF = new SingleRDF(rid, property, value);
             return singleRDF;
         }, Encoders.bean(SingleRDF.class));
+        rdfDatasetRes.unpersist();
 
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
