@@ -423,7 +423,7 @@ public class Mapper implements Serializable {
         	SingleRDF singleRDF = new SingleRDF(rid, property, value);
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class)).persist(StorageLevel.MEMORY_AND_DISK_SER());
-        rdfDatasetRes.unpersist()
+        rdfDatasetRes.unpersist();
         
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
