@@ -1,0 +1,25 @@
+/lod-mapper/lod-mapper (2).iml
+/lod-mapper/lod-mapper (1).iml
+/lod-mapper/.project
+/lod-mapper/.classpath
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
