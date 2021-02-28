@@ -391,7 +391,7 @@ public class Mapper implements Serializable {
         	}
             return rdfs.iterator();
         }, Encoders.bean(RDF.class));
-//        rdfDatasetRes.persist(StorageLevel.MEMORY_AND_DISK_SER());
+        rdfDatasetRes.persist(StorageLevel.MEMORY_AND_DISK_SER());
         // Create a single dataset of RDFS.
         Dataset<SingleRDF> rdfsDS = rdfDatasetDS.map((MapFunction<RDF, SingleRDF>) row -> {
         	String rid = row.getId();
@@ -424,8 +424,8 @@ public class Mapper implements Serializable {
         	SingleRDF singleRDF = new SingleRDF(rid, property, value);
         	return singleRDF;
         }, Encoders.bean(SingleRDF.class));
-//        rdfsRes.persist(StorageLevel.MEMORY_AND_DISK_SER());
-//        rdfDatasetRes.unpersist();
+        rdfsRes.persist(StorageLevel.MEMORY_AND_DISK_SER());
+        rdfDatasetRes.unpersist();
         
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
@@ -441,7 +441,7 @@ public class Mapper implements Serializable {
         rdfsPrj.unpersist();
         
         JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
-//		rdfsRes.unpersist();
+		rdfsRes.unpersist();
         rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
         rdfsResOrg.unpersist();
 //        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
