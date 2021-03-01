@@ -282,7 +282,7 @@ public class Mapper implements Serializable {
 	        	}
         	}
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class));
+        }, Encoders.bean(RDF.class)).repartition(300);
         
         
         /* PRJ */
@@ -395,8 +395,8 @@ public class Mapper implements Serializable {
 	        	}
         	}
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class));
-        rdfDatasetRes.persist(StorageLevel.MEMORY_AND_DISK_SER());
+        }, Encoders.bean(RDF.class)).persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);;
+
         // Create a single dataset of RDFS.
         Dataset<SingleRDF> rdfsDS = rdfDatasetDS.map((MapFunction<RDF, SingleRDF>) row -> {
         	String rid = row.getId();
@@ -412,7 +412,7 @@ public class Mapper implements Serializable {
         	String value = row.getValue();
         	SingleRDF singleRDF = new SingleRDF(rid, property, value);
         	return singleRDF;
-        }, Encoders.bean(SingleRDF.class));
+        }, Encoders.bean(SingleRDF.class)).persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
         
         Dataset<SingleRDF> rdfsPrj= rdfDatasetPrj.map((MapFunction<RDF, SingleRDF>) row -> {
         	String rid = row.getId();
@@ -428,15 +428,16 @@ public class Mapper implements Serializable {
         	String value = row.getValue();
         	SingleRDF singleRDF = new SingleRDF(rid, property, value);
         	return singleRDF;
-        }, Encoders.bean(SingleRDF.class));
-        rdfsRes.persist(StorageLevel.MEMORY_AND_DISK_SER());
-        rdfDatasetRes.unpersist();
+        }, Encoders.bean(SingleRDF.class)).persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
+
+
         
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
         rdfsDSRDD.unpersist();
         
-        JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
+        rdfsOrg.unpersist();
         rdfsOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organisation/");
         rdfsOrgRDD.unpersist();
         
@@ -445,7 +446,7 @@ public class Mapper implements Serializable {
         rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
         rdfsPrj.unpersist();
         
-        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
 		rdfsRes.unpersist();
         rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
         rdfsResOrg.unpersist();
