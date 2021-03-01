@@ -52,10 +52,10 @@ public class Mapper implements Serializable {
         Path outPutPath = new Path(configObject.getDatapath());
         if (fs.exists(outPutPath))
             fs.delete(outPutPath, true);
-        Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS()).repartition(300);
-        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg()).repartition(300);
-        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj()).repartition(300);
-        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes()).repartition(300);
+        Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS()).repartition(configObject.getNumPartitions());
+        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg()).repartition(configObject.getNumPartitions());
+        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj()).repartition(configObject.getNumPartitions());
+        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes()).repartition(configObject.getNumPartitions());
 
         Dataset<Row> groupedRecordsDS = dsRecords.withColumn("versioning", col("versioning").cast(DataTypes.StringType))
                 .groupBy(col("id")).agg(
@@ -79,7 +79,7 @@ public class Mapper implements Serializable {
                         (collect_set(col("versioning"))).alias("versioning"),
                         (collect_list(col("target"))).alias("target"),
                         (collect_list(col("reltype"))).alias("reltype"),
-                        (collect_list(col("subreltype"))).alias("subreltype"));
+                        (collect_list(col("subreltype"))).alias("subreltype")).repartition(configObject.getNumPartitions());;
 
         Dataset<Row> groupedRecordsOrg = orgRecords.groupBy(col("id")).agg(
                 collect_set(col("originalid")).alias("originalid"),
@@ -95,7 +95,7 @@ public class Mapper implements Serializable {
                 collect_set(col("logourl")).alias("logourl"),
                 collect_list(col("target")).alias("target"),
                 collect_list(col("reltype")).alias("reltype"),
-                collect_list(col("subreltype")).alias("subreltype")).repartition(300);
+                collect_list(col("subreltype")).alias("subreltype")).repartition(configObject.getNumPartitions());
 
         Dataset<Row> groupedRecordsPrj = prjRecords.withColumn("fundedamount", col("fundedamount").cast(DataTypes.StringType))
                 .withColumn("totalcost", col("totalcost").cast(DataTypes.StringType))
@@ -126,7 +126,7 @@ public class Mapper implements Serializable {
                         collect_set(col("startdate")).alias("startdate"),
                         collect_list(col("target")).alias("target"),
                         collect_list(col("reltype")).alias("reltype"),
-                        collect_list(col("subreltype")).alias("subreltype"));
+                        collect_list(col("subreltype")).alias("subreltype")).repartition(configObject.getNumPartitions());;
 
         Dataset<Row> groupedRecordsRes = resRecords
                 .groupBy(col("id")).agg(
@@ -149,7 +149,7 @@ public class Mapper implements Serializable {
                         flatten(collect_set(col("externalreference"))).alias("externalreference"),
                         collect_list(col("target")).alias("target"),
                         collect_list(col("reltype")).alias("reltype"),
-                        collect_list(col("subreltype")).alias("subreltype")).repartition(300);
+                        collect_list(col("subreltype")).alias("subreltype")).repartition(configObject.getNumPartitions());
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
         List<String> columnsOrg = Arrays.asList(groupedRecordsOrg.columns());
         List<String> columnsPrj = Arrays.asList(groupedRecordsPrj.columns());
@@ -214,7 +214,7 @@ public class Mapper implements Serializable {
                 }
             }
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class));
+        }, Encoders.bean(RDF.class)).repartition(configObject.getNumPartitions());;
 
         /* ORG */
         Dataset<RDF> rdfDatasetOrg = groupedRecordsOrg.flatMap((FlatMapFunction<Row, RDF>) row -> {
@@ -263,7 +263,7 @@ public class Mapper implements Serializable {
                 }
             }
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class)).repartition(300);
+        }, Encoders.bean(RDF.class)).repartition(configObject.getNumPartitions());;
 
 
         /* PRJ */
@@ -313,7 +313,7 @@ public class Mapper implements Serializable {
                 }
             }
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class));
+        }, Encoders.bean(RDF.class)).repartition(configObject.getNumPartitions());;
 
         /* RES */
         Dataset<RDF> rdfDatasetRes = groupedRecordsRes.flatMap((FlatMapFunction<Row, RDF>) row -> {
@@ -370,7 +370,7 @@ public class Mapper implements Serializable {
                 }
             }
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class)).persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
+        }, Encoders.bean(RDF.class)).repartition(configObject.getNumPartitions());
         ;
 
         // Create a single dataset of RDFS.
@@ -380,7 +380,7 @@ public class Mapper implements Serializable {
             String value = row.getValue();
             SingleRDF singleRDF = new SingleRDF(rid, property, value);
             return singleRDF;
-        }, Encoders.bean(SingleRDF.class));
+        }, Encoders.bean(SingleRDF.class)).repartition(configObject.getNumPartitions());;
 
         Dataset<SingleRDF> rdfsOrg = rdfDatasetOrg.map((MapFunction<RDF, SingleRDF>) row -> {
             String rid = row.getId();
@@ -388,7 +388,7 @@ public class Mapper implements Serializable {
             String value = row.getValue();
             SingleRDF singleRDF = new SingleRDF(rid, property, value);
             return singleRDF;
-        }, Encoders.bean(SingleRDF.class)).persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
+        }, Encoders.bean(SingleRDF.class)).repartition(configObject.getNumPartitions());
 
         Dataset<SingleRDF> rdfsPrj = rdfDatasetPrj.map((MapFunction<RDF, SingleRDF>) row -> {
             String rid = row.getId();
@@ -396,7 +396,7 @@ public class Mapper implements Serializable {
             String value = row.getValue();
             SingleRDF singleRDF = new SingleRDF(rid, property, value);
             return singleRDF;
-        }, Encoders.bean(SingleRDF.class));
+        }, Encoders.bean(SingleRDF.class)).repartition(configObject.getNumPartitions());;
 
         Dataset<SingleRDF> rdfsRes = rdfDatasetRes.map((MapFunction<RDF, SingleRDF>) row -> {
             String rid = row.getId();
@@ -404,27 +404,23 @@ public class Mapper implements Serializable {
             String value = row.getValue();
             SingleRDF singleRDF = new SingleRDF(rid, property, value);
             return singleRDF;
-        }, Encoders.bean(SingleRDF.class)).persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
+        }, Encoders.bean(SingleRDF.class)).repartition(configObject.getNumPartitions());
 
 
-        JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().repartition(configObject.getNumPartitions());
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
-        rdfsDSRDD.unpersist();
 
-        JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
-        rdfsOrg.unpersist();
+        JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD().repartition(configObject.getNumPartitions());
         rdfsOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organisation/");
-        rdfsOrgRDD.unpersist();
 
 
-        JavaRDD<SingleRDF> rdfsPrjOrg = rdfsPrj.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER());
+        JavaRDD<SingleRDF> rdfsPrjOrg = rdfsPrj.javaRDD().repartition(configObject.getNumPartitions());
         rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
-        rdfsPrj.unpersist();
 
-        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().persist(StorageLevel.MEMORY_AND_DISK_SER()).repartition(300);
-        rdfsRes.unpersist();
+
+        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().repartition(configObject.getNumPartitions());
         rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
-        rdfsResOrg.unpersist();
+
 //        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
 //        List<FileStatus> files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/datasource/" + "/part*")));
 //        for(FileStatus file : files) {

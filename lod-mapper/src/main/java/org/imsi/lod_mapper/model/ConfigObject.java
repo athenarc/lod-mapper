@@ -21,9 +21,16 @@ public class ConfigObject implements Serializable{
 	protected String valueMap;
 	protected String idMap;
 	protected Integer dataset;
+	protected  Integer numPartitions;
 	protected String datapath;
 	protected HashMap<String, String> mappings;
-	
+
+	public Integer getNumPartitions() {
+		return numPartitions;
+	}
+	public void setNumPartitions(Integer numPartitions) {
+		this.numPartitions = numPartitions;
+	}
 	public String getWarehouseLocation() {
 		return warehouseLocation;
 	}
