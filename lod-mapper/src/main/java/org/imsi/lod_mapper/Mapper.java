@@ -408,18 +408,18 @@ public class Mapper implements Serializable {
         }, Encoders.bean(SingleRDF.class));
 
 
-        JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD().repartition(configObject.getNumPartitions());
+        JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD();
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
 
-        JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD().repartition(configObject.getNumPartitions());
+        JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD();
         rdfsOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organisation/");
 
 
-        JavaRDD<SingleRDF> rdfsPrjOrg = rdfsPrj.javaRDD().repartition(configObject.getNumPartitions());
+        JavaRDD<SingleRDF> rdfsPrjOrg = rdfsPrj.javaRDD();
         rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
 
 
-        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().repartition(configObject.getNumPartitions());
+        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD();
         rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
 
 //        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
