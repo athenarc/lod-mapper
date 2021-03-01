@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.api.java.JavaRDD;
@@ -30,7 +28,6 @@ import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.storage.StorageLevel;
 import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
-import org.imsi.lod_mapper.model.Organisation;
 import org.imsi.lod_mapper.model.RDF;
 import org.imsi.lod_mapper.model.SingleRDF;
 import org.apache.spark.sql.SparkSession;
@@ -38,7 +35,6 @@ import org.apache.spark.sql.SparkSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hadoop.fs.FileSystem;
 import scala.reflect.ClassTag;
 
 public class Mapper implements Serializable {
