@@ -95,7 +95,7 @@ public class Mapper implements Serializable {
                 collect_set(col("logourl")).alias("logourl"),
                 collect_list(col("target")).alias("target"),
                 collect_list(col("reltype")).alias("reltype"),
-                collect_list(col("subreltype")).alias("subreltype"));
+                collect_list(col("subreltype")).alias("subreltype")).repartition(300);
 
         Dataset<Row> groupedRecordsPrj = prjRecords.withColumn("fundedamount", col("fundedamount").cast(DataTypes.StringType))
                 .withColumn("totalcost", col("totalcost").cast(DataTypes.StringType))
@@ -149,7 +149,7 @@ public class Mapper implements Serializable {
                         flatten(collect_set(col("externalreference"))).alias("externalreference"),
                         collect_list(col("target")).alias("target"),
                         collect_list(col("reltype")).alias("reltype"),
-                        collect_list(col("subreltype")).alias("subreltype"));
+                        collect_list(col("subreltype")).alias("subreltype")).repartition(300);
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
         List<String> columnsOrg = Arrays.asList(groupedRecordsOrg.columns());
         List<String> columnsPrj = Arrays.asList(groupedRecordsPrj.columns());
