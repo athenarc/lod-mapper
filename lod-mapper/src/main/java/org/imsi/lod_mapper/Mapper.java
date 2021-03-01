@@ -65,10 +65,10 @@ public class Mapper implements Serializable {
         Path outPutPath = new Path(configObject.getDatapath());
         if (fs.exists(outPutPath))
         	fs.delete(outPutPath, true);
-        Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS());
-        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg());
-        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj());
-        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes());
+        Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS()).repartition(300);
+        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg()).repartition(300);
+        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj()).repartition(300);
+        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes()).repartition(300);
 
         Dataset<Row> groupedRecordsDS = dsRecords.withColumn("versioning", col("versioning").cast(DataTypes.StringType))
 				.groupBy(col("id")).agg(
