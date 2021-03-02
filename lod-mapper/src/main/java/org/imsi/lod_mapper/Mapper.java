@@ -60,6 +60,10 @@ public class Mapper implements Serializable {
 
         SparkSession sparkSession = setupSparkSession();
         sparkSession.conf().set("spark.sql.shuffle.partitions", configObject.getShufflePartitions());
+        sparkSession.conf().set("spark.reducer.maxReqsInFlight", 1);
+        sparkSession.conf().set("spark.shuffle.io.retryWait", "60s");
+        sparkSession.conf().set("spark.shuffle.io.maxRetries", 10);
+        sparkSession.conf().set("spark.network.timeout", "800s");
 
         // Delete data if already exists
         FileSystem fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
