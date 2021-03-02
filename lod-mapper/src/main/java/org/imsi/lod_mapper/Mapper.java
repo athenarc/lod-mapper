@@ -71,10 +71,10 @@ public class Mapper implements Serializable {
         if (fs.exists(outPutPath))
             fs.delete(outPutPath, true);
 
-        Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS()).repartition(configObject.getNumPartitions(),col("id"));
-        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg()).repartition(configObject.getNumPartitions(),col("id"));
-        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj()).repartition(configObject.getNumPartitions(),col("id"));
-        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes()).repartition(configObject.getNumPartitions(),col("id"));
+        Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS());//.repartition(configObject.getNumPartitions(),col("id"));
+        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg());//.repartition(configObject.getNumPartitions(),col("id"));
+        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj());//.repartition(configObject.getNumPartitions(),col("id"));
+        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes());//.repartition(configObject.getNumPartitions(),col("id"));
 
         Dataset<Row> groupedRecordsDS = dsRecords.withColumn("versioning", col("versioning").cast(DataTypes.StringType))
                 .groupBy(col("id")).agg(
