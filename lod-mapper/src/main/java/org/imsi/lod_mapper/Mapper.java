@@ -373,9 +373,10 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < col.size(); j++) {
                                 try {
                                     String val = col.get(j);
-                                    if (colName.contentEquals("language"))
+                                    if (colName.contentEquals("language")) {
                                         val = mapLanguages.getLangURI(col.get(j));
-                                    System.out.println(val);
+                                    	System.out.println(val);
+                                    }
                                     if (val.contains("NULL")) continue;
                                     if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                     else val = '"' + val + '"';
