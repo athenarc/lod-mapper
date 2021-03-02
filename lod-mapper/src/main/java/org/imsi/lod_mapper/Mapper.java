@@ -68,9 +68,9 @@ public class Mapper implements Serializable {
             fs.delete(outPutPath, true);
 
         Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS()).repartition(configObject.getNumPartitions(),col("id"));
-        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg()).repartition(configObject.getNumPartitions(),col("id"));;
-        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj()).repartition(configObject.getNumPartitions(),col("id"));;
-        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes()).repartition(configObject.getNumPartitions(),col("id"));;
+        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg()).repartition(configObject.getNumPartitions(),col("id"));
+        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj()).repartition(configObject.getNumPartitions(),col("id"));
+        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes()).repartition(configObject.getNumPartitions(),col("id"));
 
         Dataset<Row> groupedRecordsDS = dsRecords.withColumn("versioning", col("versioning").cast(DataTypes.StringType))
                 .groupBy(col("id")).agg(
@@ -360,7 +360,6 @@ public class Mapper implements Serializable {
                                 String relVal = "<http://lod.openaire.eu/data/";
 
                                 String rel = relType.get(j).toLowerCase();
-                                System.out.println(rel);
                                 if (rel.contains("datasource")) relVal = relVal.concat("datasource/");
                                 else if (rel.contains("organisation")) relVal = relVal.concat("organisation/");
                                 else if (rel.contains("project")) relVal = relVal.concat("project/");
@@ -376,6 +375,7 @@ public class Mapper implements Serializable {
                                     String val = col.get(j);
                                     if (colName.contentEquals("language"))
                                         val = mapLanguages.getLangURI(col.get(j));
+                                    System.out.println(val);
                                     if (val.contains("NULL")) continue;
                                     if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                     else val = '"' + val + '"';
