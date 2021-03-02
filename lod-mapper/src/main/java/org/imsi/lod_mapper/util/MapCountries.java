@@ -47,7 +47,6 @@ public class MapCountries implements Serializable {
 		String countryURI="";
 		try{
 			iso_3166_1_Code = iso_3166_1_Code.trim();
-			org.apache.jena.query.ARQ.init();
 			
 			if(iso_3166_1_Code.equals("UK") || iso_3166_1_Code.equals("GB")) return "http://dbpedia.org/resource/United_Kingdom";
 //			Model dbpediaCountries =  ModelFactory.createDefaultModel();
