@@ -16,7 +16,7 @@ public class MapLanguages implements Serializable {
      * For example iso639_3 for Greek is "ell" and the respective URI from lexvo is <http://lexvo.org/id/iso639-3/ell>
      */
 
-    private InputStream is = ClassLoader.getSystemResourceAsStream("lexvo-iso639-3.tsv");
+    private InputStream is = this.getClass().getClassLoader().getResourceAsStream("lexvo-iso639-3.tsv");
     private BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
     public MapLanguages() {
