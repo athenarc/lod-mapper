@@ -21,10 +21,17 @@ public class ConfigObject implements Serializable{
 	protected String valueMap;
 	protected String idMap;
 	protected Integer dataset;
-	protected  Integer numPartitions;
+	protected Integer numPartitions;
+	protected Integer shufflePartitions;
 	protected String datapath;
 	protected HashMap<String, String> mappings;
 
+	public Integer getShufflePartitions() {
+		return shufflePartitions;
+	}
+	public void setShufflePartitions(Integer shufflePartitions) {
+		this.shufflePartitions =shufflePartitions;
+	}
 	public Integer getNumPartitions() {
 		return numPartitions;
 	}

@@ -59,7 +59,7 @@ public class Mapper implements Serializable {
         readProperties(args);
 
         SparkSession sparkSession = setupSparkSession();
-        sparkSession.conf().set("spark.sql.shuffle.partitions", configObject.getNumPartitions());
+        sparkSession.conf().set("spark.sql.shuffle.partitions", configObject.getShufflePartitions());
 
         // Delete data if already exists
         FileSystem fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
