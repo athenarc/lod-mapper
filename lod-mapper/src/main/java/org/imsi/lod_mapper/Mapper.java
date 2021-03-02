@@ -15,11 +15,12 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.SparkSession.Builder;
 import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.storage.StorageLevel;
 import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
 import org.imsi.lod_mapper.model.RDF;
 import org.imsi.lod_mapper.model.SingleRDF;
+import org.imsi.lod_mapper.util.MapCountries;
+import org.imsi.lod_mapper.util.MapLanguages;
 import scala.reflect.ClassTag;
 
 import java.io.File;
@@ -38,6 +39,17 @@ public class Mapper implements Serializable {
     private static String pathToPropertiesFile = "config.json";
     private static ConfigObject configObject;
     private static Map<String, List<String>> params;
+    private  static MapLanguages mapLanguages;
+
+    static {
+        mapLanguages = new MapLanguages();
+    }
+
+    private  static  MapCountries mapCountries;
+
+    static {
+        mapCountries = new MapCountries();
+    }
 
 
     public static void main(String[] args) throws IOException {
@@ -46,7 +58,7 @@ public class Mapper implements Serializable {
         readProperties(args);
 
         SparkSession sparkSession = setupSparkSession();
-        sparkSession.conf().set("spark.sql.shuffle.partitions",configObject.getNumPartitions());
+        sparkSession.conf().set("spark.sql.shuffle.partitions", configObject.getNumPartitions());
 
         // Delete data if already exists
         FileSystem fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
@@ -159,6 +171,7 @@ public class Mapper implements Serializable {
         // Broadcast the variables needed by the workers
         ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
 
+
         Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext()
                 .broadcast(new BroadcastVars(columnsDS, columnsOrg, columnsPrj, columnsRes,
                         configObject.getPropertyMap(), configObject.getValueMap(), configObject.getIdMap()), classTagBroadcastVars);
@@ -253,7 +266,9 @@ public class Mapper implements Serializable {
                     } else {
                         if (col != null)
                             for (int j = 0; j < col.size(); j++) {
-                                String val = col.get(j).toString();
+                                String val = col.get(j);
+                                if (colName.contentEquals("country"))
+                                    val = mapCountries.getCountryURI(col.get(j));
                                 if (val.contains("NULL")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
@@ -356,7 +371,9 @@ public class Mapper implements Serializable {
                         if (col != null)
                             for (int j = 0; j < col.size(); j++) {
                                 try {
-                                    String val = col.get(j).toString();
+                                    String val = col.get(j);
+                                    if (colName.contentEquals("language"))
+                                        val = mapLanguages.getLangURI(col.get(j));
                                     if (val.contains("NULL")) continue;
                                     if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                     else val = '"' + val + '"';
