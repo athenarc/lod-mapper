@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.HashPartitioner;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
@@ -22,6 +24,7 @@ import org.imsi.lod_mapper.model.RDF;
 import org.imsi.lod_mapper.model.SingleRDF;
 import org.imsi.lod_mapper.util.MapCountries;
 import org.imsi.lod_mapper.util.MapLanguages;
+import scala.Tuple2;
 import scala.reflect.ClassTag;
 
 import java.io.File;
@@ -444,6 +447,8 @@ public class Mapper implements Serializable {
 
 
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD();
+//        JavaPairRDD<SingleRDF, Integer> test = rdfsDSRDD.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
+//        test.pa
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
 
         JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD();
@@ -454,7 +459,7 @@ public class Mapper implements Serializable {
         rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
 
 
-        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD();
+        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().cache();
         rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
 
 //        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
