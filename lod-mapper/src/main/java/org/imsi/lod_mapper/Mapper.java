@@ -41,9 +41,16 @@ public class Mapper implements Serializable {
     private static ConfigObject configObject;
     private static Map<String, List<String>> params;
     private  static MapLanguages mapLanguages;
+
+    static {
+        mapLanguages = new MapLanguages();
+    }
+
     private  static  MapCountries mapCountries;
 
-    
+    static {
+        mapCountries = new MapCountries();
+    }
 
 
     public static void main(String[] args) throws IOException {
@@ -53,12 +60,6 @@ public class Mapper implements Serializable {
 
         SparkSession sparkSession = setupSparkSession();
         sparkSession.conf().set("spark.sql.shuffle.partitions", configObject.getNumPartitions());
-       
-        mapLanguages = new MapLanguages();
-        
-
-
-        mapCountries = new MapCountries();
 
         // Delete data if already exists
         FileSystem fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
