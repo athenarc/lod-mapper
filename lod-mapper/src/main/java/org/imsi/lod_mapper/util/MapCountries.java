@@ -31,7 +31,7 @@ public class MapCountries implements Serializable {
 */
 
 
-	private InputStream is =  MapCountries.class.getResourceAsStream("dbpedia_Countries.rdf");
+	private InputStream is =  this.getClass().getClassLoader().getResourceAsStream("dbpedia_Countries.rdf");
 	private   Model dbpediaCountries;
 
 	{
