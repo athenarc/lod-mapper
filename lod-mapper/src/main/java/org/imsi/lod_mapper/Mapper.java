@@ -245,7 +245,7 @@ public class Mapper implements Serializable {
             String rowId = row.get(0).toString();
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
-            if (!rowId.contains("dedup")) {
+            if (rowId.contains("dedup")) {
             	RDF rdfH = new RDF(idVal + "organisation/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/OrganisationEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
