@@ -274,7 +274,7 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < col.size(); j++) {
                                 String val = col.get(j);
                                 if (colName.contentEquals("country"))
-                                    val = mapCountries.getCountryURI(col.get(j));
+                                    val = mapCountries.getCountryURI(col.get(j).trim());
                                 if (val.contains("NULL")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
