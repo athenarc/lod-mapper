@@ -40,17 +40,17 @@ public class Mapper implements Serializable {
     private static String pathToPropertiesFile = "config.json";
     private static ConfigObject configObject;
     private static Map<String, List<String>> params;
-    private  static MapLanguages mapLanguages;
-
-    static {
-        mapLanguages = new MapLanguages();
-    }
-
-    private  static  MapCountries mapCountries;
-
-    static {
-        mapCountries = new MapCountries();
-    }
+//    private  static MapLanguages mapLanguages;
+//
+//    static {
+//        mapLanguages = new MapLanguages();
+//    }
+//
+//    private  static  MapCountries mapCountries;
+//
+//    static {
+//        mapCountries = new MapCountries();
+//    }
 
 
     public static void main(String[] args) throws IOException {
@@ -269,8 +269,8 @@ public class Mapper implements Serializable {
                         if (col != null)
                             for (int j = 0; j < col.size(); j++) {
                                 String val = col.get(j);
-                                if (colName.contentEquals("country"))
-                                    val = mapCountries.getCountryURI(col.get(j));
+//                                if (colName.contentEquals("country"))
+//                                    val = mapCountries.getCountryURI(col.get(j));
                                 if (val.contains("NULL")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
@@ -374,8 +374,8 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < col.size(); j++) {
                                 try {
                                     String val = col.get(j);
-                                    if (colName.contentEquals("language"))
-                                        val = mapLanguages.getLangURI(col.get(j));
+//                                    if (colName.contentEquals("language"))
+//                                        val = mapLanguages.getLangURI(col.get(j));
                                     if (val.contains("NULL")) continue;
                                     if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                     else val = '"' + val + '"';
