@@ -195,7 +195,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-            	RDF rdfH = new RDF(idVal + "datasource/" + rowId, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>", "<http://lod.openaire.eu/vocab/DatasourceEntity>");
+            	RDF rdfH = new RDF(idVal + "datasource/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/DatasourceEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
@@ -246,7 +246,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-            	RDF rdfH = new RDF(idVal + "organisation/" + rowId, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>", "<http://lod.openaire.eu/vocab/OrganisationEntity>");
+            	RDF rdfH = new RDF(idVal + "organisation/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/OrganisationEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
@@ -300,7 +300,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-            	RDF rdfH = new RDF(idVal + "project/" + rowId, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>", "<http://lod.openaire.eu/vocab/ProjectEntity>");
+            	RDF rdfH = new RDF(idVal + "project/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/ProjectEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
@@ -351,7 +351,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-            	RDF rdfH = new RDF(idVal + "result/" + rowId, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>", "<http://lod.openaire.eu/vocab/ResultEntity>");
+            	RDF rdfH = new RDF(idVal + "result/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/ResultEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
