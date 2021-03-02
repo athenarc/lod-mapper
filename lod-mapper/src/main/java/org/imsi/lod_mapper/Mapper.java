@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.spark.HashPartitioner;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.MapFunction;
@@ -66,10 +67,10 @@ public class Mapper implements Serializable {
         if (fs.exists(outPutPath))
             fs.delete(outPutPath, true);
 
-        Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS());
-        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg());
-        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj());
-        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes());
+        Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS()).repartition(configObject.getNumPartitions(),col("id"));
+        Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg()).repartition(configObject.getNumPartitions(),col("id"));;
+        Dataset<Row> prjRecords = sparkSession.sql(configObject.getQueryPrj()).repartition(configObject.getNumPartitions(),col("id"));;
+        Dataset<Row> resRecords = sparkSession.sql(configObject.getQueryRes()).repartition(configObject.getNumPartitions(),col("id"));;
 
         Dataset<Row> groupedRecordsDS = dsRecords.withColumn("versioning", col("versioning").cast(DataTypes.StringType))
                 .groupBy(col("id")).agg(
