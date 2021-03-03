@@ -176,7 +176,7 @@ public class Mapper implements Serializable {
                         flatten(collect_set(col("externalreference"))).alias("externalreference"),
                         collect_list(col("target")).alias("target"),
                         collect_list(col("reltype")).alias("reltype"),
-                        collect_list(col("subreltype")).alias("subreltype"));
+                        collect_list(col("subreltype")).alias("subreltype")).repartition(configObject.getNumPartitions(),col("id"));;
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
         List<String> columnsOrg = Arrays.asList(groupedRecordsOrg.columns());
         List<String> columnsPrj = Arrays.asList(groupedRecordsPrj.columns());
@@ -414,7 +414,7 @@ public class Mapper implements Serializable {
                 }
             }
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class)).repartition(configObject.getNumPartitions(),col("id"));
+        }, Encoders.bean(RDF.class));
 
         // Create a single dataset of RDFS.
         Dataset<SingleRDF> rdfsDS = rdfDatasetDS.map((MapFunction<RDF, SingleRDF>) row -> {
