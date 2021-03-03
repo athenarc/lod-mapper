@@ -126,7 +126,8 @@ public class Mapper implements Serializable {
 
         Dataset<Row> groupedRecordsPrj = prjRecords.withColumn("fundedamount", col("fundedamount").cast(DataTypes.StringType))
                 .withColumn("totalcost", col("totalcost").cast(DataTypes.StringType))
-                .groupBy(col("id")).agg(
+                .groupBy(col("id"))
+                .agg(
                         collect_set(col("acronym")).alias("acronym"),
                         collect_set(col("callidentifier")).alias("callidentifier"),
                         collect_set(col("contracttype")).alias("contracttype"),
@@ -156,7 +157,8 @@ public class Mapper implements Serializable {
                         collect_list(col("subreltype")).alias("subreltype"));
 
         Dataset<Row> groupedRecordsRes = resRecords
-                .groupBy(col("id")).agg(
+//                .groupBy(col("id"))
+                .agg(
                         collect_set(col("originalid")).alias("originalid"),
                         collect_set(col("dateofcollection")).alias("dateofcollection"),
                         collect_set(col("title")).alias("title"),
@@ -176,7 +178,8 @@ public class Mapper implements Serializable {
                         flatten(collect_set(col("externalreference"))).alias("externalreference"),
                         collect_list(col("target")).alias("target"),
                         collect_list(col("reltype")).alias("reltype"),
-                        collect_list(col("subreltype")).alias("subreltype")).repartition(configObject.getNumPartitions(),col("id"));;
+                        collect_list(col("subreltype")).alias("subreltype"));
+//                .repartition(configObject.getNumPartitions(),col("id"));
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
         List<String> columnsOrg = Arrays.asList(groupedRecordsOrg.columns());
         List<String> columnsPrj = Arrays.asList(groupedRecordsPrj.columns());
