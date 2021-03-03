@@ -202,7 +202,7 @@ public class Mapper implements Serializable {
                 .withColumn("pid", flatten(col("pid")))
                 .withColumn("author", flatten(col("author")))
                 .withColumn("subject", flatten(col("subject")))
-                .withColumn("externalreference" ,flatten(col("externalreference"));
+                .withColumn("externalreference" ,flatten(col("externalreference")));
 
 
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
