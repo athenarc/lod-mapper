@@ -22,6 +22,7 @@ import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
 import org.imsi.lod_mapper.model.RDF;
 import org.imsi.lod_mapper.model.SingleRDF;
+import org.imsi.lod_mapper.util.CustomPartitioner;
 import org.imsi.lod_mapper.util.MapCountries;
 import org.imsi.lod_mapper.util.MapLanguages;
 import scala.Tuple2;
@@ -463,7 +464,7 @@ public class Mapper implements Serializable {
     //repartition
         JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD();
         JavaPairRDD<SingleRDF, Integer> test = rdfsResOrg.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
-        test.partitionBy(new HashPartitioner(configObject.getNumPartitions()));
+        test.partitionBy(new CustomPartitioner(configObject.getNumPartitions()));
         JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
         outputRdd.saveAsTextFile(configObject.getDatapath() + "/result/");
 
