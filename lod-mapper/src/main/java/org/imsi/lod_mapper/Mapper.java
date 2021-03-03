@@ -451,8 +451,6 @@ public class Mapper implements Serializable {
 
 
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD();
-//        JavaPairRDD<SingleRDF, Integer> test = rdfsDSRDD.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
-//        test.pa
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
 
         JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD();
@@ -464,7 +462,10 @@ public class Mapper implements Serializable {
 
 
         JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD().cache();
-        rdfsResOrg.saveAsTextFile(configObject.getDatapath() + "/result/");
+        JavaPairRDD<SingleRDF, Integer> test = rdfsDSRDD.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
+        test.partitionBy(new HashPartitioner(configObject.getNumPartitions()));
+        JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
+        outputRdd.saveAsTextFile(configObject.getDatapath() + "/result/");
 
 //        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
 //        List<FileStatus> files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/datasource/" + "/part*")));
