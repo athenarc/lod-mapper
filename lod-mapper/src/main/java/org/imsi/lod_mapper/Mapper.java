@@ -22,9 +22,9 @@ import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
 import org.imsi.lod_mapper.model.RDF;
 import org.imsi.lod_mapper.model.SingleRDF;
-import org.imsi.lod_mapper.util.SingleRDFPartitioner;
 import org.imsi.lod_mapper.util.MapCountries;
 import org.imsi.lod_mapper.util.MapLanguages;
+import org.imsi.lod_mapper.util.SingleRDFPartitioner;
 import scala.Tuple2;
 import scala.reflect.ClassTag;
 
@@ -44,13 +44,12 @@ public class Mapper implements Serializable {
     private static String pathToPropertiesFile = "config.json";
     private static ConfigObject configObject;
     private static Map<String, List<String>> params;
-    private  static MapLanguages mapLanguages;
+    private static MapLanguages mapLanguages;
+    private static MapCountries mapCountries;
 
     static {
         mapLanguages = new MapLanguages();
     }
-
-    private  static  MapCountries mapCountries;
 
     static {
         mapCountries = new MapCountries();
@@ -69,8 +68,8 @@ public class Mapper implements Serializable {
         sparkSession.conf().set("spark.shuffle.io.maxRetries", 10);
         sparkSession.conf().set("spark.network.timeout", "800s");
         sparkSession.conf().set("spark.dynamicAllocation.executorIdleTimeout", 1200);
-        sparkSession.conf().set("spark.dynamicAllocation.enabled","false");
-        sparkSession.conf().set("spark.dynamicAllocation.enabled",false);
+        sparkSession.conf().set("spark.dynamicAllocation.enabled", "false");
+        sparkSession.conf().set("spark.dynamicAllocation.enabled", false);
 
 
         // Delete data if already exists
@@ -156,30 +155,59 @@ public class Mapper implements Serializable {
                         collect_list(col("reltype")).alias("reltype"),
                         collect_list(col("subreltype")).alias("subreltype"));
 
-        Dataset<Row> groupedRecordsRes = resRecords
-//                .groupBy(col("id"))
-                .agg(
-                        collect_set(col("originalid")).alias("originalid"),
-                        collect_set(col("dateofcollection")).alias("dateofcollection"),
-                        collect_set(col("title")).alias("title"),
-                        collect_set(col("publisher")).alias("publisher"),
-                        collect_set(col("bestaccessright")).alias("bestaccessright"),
-                        collect_set(col("collectedfrom")).alias("collectedfrom"),
-                        flatten(collect_set(col("pid"))).alias("pid"),
-                        flatten(collect_set(col("author"))).alias("author"),
-                        collect_set(col("resulttype")).alias("resulttype"),
-                        collect_set(col("language")).alias("language"),
-                        collect_set(col("country")).alias("country"),
-                        flatten(collect_set(col("subject"))).alias("subject"),
-                        collect_set(col("description")).alias("description"),
-                        collect_set(col("dateofacceptance")).alias("dateofacceptance"),
-                        collect_set(col("embargoenddate")).alias("embargoenddate"),
-                        collect_set(col("resourcetype")).alias("resourcetype"),
-                        flatten(collect_set(col("externalreference"))).alias("externalreference"),
-                        collect_list(col("target")).alias("target"),
-                        collect_list(col("reltype")).alias("reltype"),
-                        collect_list(col("subreltype")).alias("subreltype"));
+//        Dataset<Row> groupedRecordsRes = resRecords
+//                .withColumn("id", col("id"))
+////                .groupBy(col("id"))
+//                .agg(
+//                        collect_set(col("originalid")).alias("originalid"),
+//                        collect_set(col("dateofcollection")).alias("dateofcollection"),
+//                        collect_set(col("title")).alias("title"),
+//                        collect_set(col("publisher")).alias("publisher"),
+//                        collect_set(col("bestaccessright")).alias("bestaccessright"),
+//                        collect_set(col("collectedfrom")).alias("collectedfrom"),
+//                        flatten(collect_set(col("pid"))).alias("pid"),
+//                        flatten(collect_set(col("author"))).alias("author"),
+//                        collect_set(col("resulttype")).alias("resulttype"),
+//                        collect_set(col("language")).alias("language"),
+//                        collect_set(col("country")).alias("country"),
+//                        flatten(collect_set(col("subject"))).alias("subject"),
+//                        collect_set(col("description")).alias("description"),
+//                        collect_set(col("dateofacceptance")).alias("dateofacceptance"),
+//                        collect_set(col("embargoenddate")).alias("embargoenddate"),
+//                        collect_set(col("resourcetype")).alias("resourcetype"),
+//                        flatten(collect_set(col("externalreference"))).alias("externalreference"),
+//                        collect_list(col("target")).alias("target"),
+//                        collect_list(col("reltype")).alias("reltype"),
+//                        collect_list(col("subreltype")).alias("subreltype"));
 //                .repartition(configObject.getNumPartitions(),col("id"));
+
+        Dataset<Row> groupedRecordsRes = resRecords
+                .withColumn("id", col("id"))
+                .withColumn("originalid", col("originalid")).alias("originalid")
+                .withColumn("dateofcollection", col("dateofcollection")).alias("dateofcollection")
+                .withColumn("title", col("title")).alias("title")
+                .withColumn("publisher", col("publisher")).alias("publisher")
+                .withColumn("bestaccessright", col("bestaccessright")).alias("bestaccessright")
+                .withColumn("collectedfrom", col("collectedfrom")).alias("collectedfrom")
+                .withColumn("resulttype", col("resulttype")).alias("resulttype")
+                .withColumn("language", col("language")).alias("language")
+                .withColumn("country", col("country")).alias("country")
+                .withColumn("description", col("description")).alias("description")
+                .withColumn("dateofacceptance", col("dateofacceptance")).alias("dateofacceptance")
+                .withColumn("embargoenddate", col("embargoenddate")).alias("embargoenddate")
+                .withColumn("resourcetype", col("resourcetype")).alias("resourcetype")
+                .withColumn("target", col("target")).alias("target")
+                .withColumn("reltype", col("reltype")).alias("reltype")
+                .withColumn("subreltype", col("subreltype")).alias("subreltype")
+                .agg(
+
+                        flatten(col("pid")).alias("pid"),
+                        flatten(col("author")).alias("author"),
+                        flatten(col("subject")).alias("subject"),
+                        flatten(col("externalreference")).alias("externalreference")
+                );
+
+
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
         List<String> columnsOrg = Arrays.asList(groupedRecordsOrg.columns());
         List<String> columnsPrj = Arrays.asList(groupedRecordsPrj.columns());
@@ -210,7 +238,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-            	RDF rdfH = new RDF(idVal + "datasource/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/DatasourceEntity>");
+                RDF rdfH = new RDF(idVal + "datasource/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/DatasourceEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
@@ -261,7 +289,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-            	RDF rdfH = new RDF(idVal + "organisation/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/OrganisationEntity>");
+                RDF rdfH = new RDF(idVal + "organisation/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/OrganisationEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
@@ -289,7 +317,7 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < col.size(); j++) {
                                 String val = col.get(j);
                                 if (colName.contentEquals("country")) {
-                                	System.out.println("1: " + val);
+                                    System.out.println("1: " + val);
                                     val = mapCountries.getCountryURI(col.get(j).trim());
                                     System.out.println("2: " + val);
                                 }
@@ -318,7 +346,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-            	RDF rdfH = new RDF(idVal + "project/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/ProjectEntity>");
+                RDF rdfH = new RDF(idVal + "project/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/ProjectEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
@@ -369,7 +397,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-            	RDF rdfH = new RDF(idVal + "result/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/ResultEntity>");
+                RDF rdfH = new RDF(idVal + "result/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/ResultEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
@@ -401,7 +429,7 @@ public class Mapper implements Serializable {
                                     String val = col.get(j);
                                     if (colName.contentEquals("language")) {
                                         val = mapLanguages.getLangURI(col.get(j));
-                                    	System.out.println(val);
+                                        System.out.println(val);
                                     }
                                     if (val.contains("NULL")) continue;
                                     if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
@@ -472,7 +500,7 @@ public class Mapper implements Serializable {
         JavaRDD<SingleRDF> rdfsPrjOrg = rdfsPrj.javaRDD();
         rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
 
-    //repartition
+        //repartition
         JavaPairRDD<SingleRDF, Integer> test = srResRDD.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
         test.partitionBy(new SingleRDFPartitioner(configObject.getNumPartitions()));
         JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
