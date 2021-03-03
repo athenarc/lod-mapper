@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.spark.HashPartitioner;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
@@ -22,7 +21,7 @@ import org.imsi.lod_mapper.model.BroadcastVars;
 import org.imsi.lod_mapper.model.ConfigObject;
 import org.imsi.lod_mapper.model.RDF;
 import org.imsi.lod_mapper.model.SingleRDF;
-import org.imsi.lod_mapper.util.CustomPartitioner;
+import org.imsi.lod_mapper.util.SingleRDFPartitioner;
 import org.imsi.lod_mapper.util.MapCountries;
 import org.imsi.lod_mapper.util.MapLanguages;
 import scala.Tuple2;
@@ -464,7 +463,7 @@ public class Mapper implements Serializable {
     //repartition
         JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD();
         JavaPairRDD<SingleRDF, Integer> test = rdfsResOrg.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
-        test.partitionBy(new CustomPartitioner(configObject.getNumPartitions()));
+        test.partitionBy(new SingleRDFPartitioner(configObject.getNumPartitions()));
         JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
         outputRdd.saveAsTextFile(configObject.getDatapath() + "/result/");
 

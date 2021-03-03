@@ -3,10 +3,10 @@ package org.imsi.lod_mapper.util;
 import org.apache.spark.Partitioner;
 import org.imsi.lod_mapper.model.SingleRDF;
 
-public class CustomPartitioner extends Partitioner {
+public class SingleRDFPartitioner extends Partitioner {
 
     private final int numParts;
-    public CustomPartitioner(int numParts) {
+    public SingleRDFPartitioner(int numParts) {
         this.numParts = numParts;
     }
 
