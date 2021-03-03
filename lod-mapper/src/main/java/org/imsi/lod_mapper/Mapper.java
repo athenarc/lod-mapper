@@ -27,6 +27,7 @@ import org.imsi.lod_mapper.util.MapLanguages;
 import org.imsi.lod_mapper.util.SingleRDFPartitioner;
 import scala.Tuple2;
 import scala.reflect.ClassTag;
+import scala.reflect.ClassTag$;
 
 import java.io.File;
 import java.io.IOException;
@@ -179,33 +180,29 @@ public class Mapper implements Serializable {
 //                        collect_list(col("target")).alias("target"),
 //                        collect_list(col("reltype")).alias("reltype"),
 //                        collect_list(col("subreltype")).alias("subreltype"));
-//                .repartition(configObject.getNumPartitions(),col("id"));
 
         Dataset<Row> groupedRecordsRes = resRecords
                 .withColumn("id", col("id"))
-                .withColumn("originalid", col("originalid")).alias("originalid")
-                .withColumn("dateofcollection", col("dateofcollection")).alias("dateofcollection")
-                .withColumn("title", col("title")).alias("title")
-                .withColumn("publisher", col("publisher")).alias("publisher")
-                .withColumn("bestaccessright", col("bestaccessright")).alias("bestaccessright")
-                .withColumn("collectedfrom", col("collectedfrom")).alias("collectedfrom")
-                .withColumn("resulttype", col("resulttype")).alias("resulttype")
-                .withColumn("language", col("language")).alias("language")
-                .withColumn("country", col("country")).alias("country")
-                .withColumn("description", col("description")).alias("description")
-                .withColumn("dateofacceptance", col("dateofacceptance")).alias("dateofacceptance")
-                .withColumn("embargoenddate", col("embargoenddate")).alias("embargoenddate")
-                .withColumn("resourcetype", col("resourcetype")).alias("resourcetype")
-                .withColumn("target", col("target")).alias("target")
-                .withColumn("reltype", col("reltype")).alias("reltype")
-                .withColumn("subreltype", col("subreltype")).alias("subreltype")
-                .agg(
-
-                        flatten(col("pid")).alias("pid"),
-                        flatten(col("author")).alias("author"),
-                        flatten(col("subject")).alias("subject"),
-                        flatten(col("externalreference")).alias("externalreference")
-                );
+                .withColumn("originalid", col("originalid"))
+                .withColumn("dateofcollection", col("dateofcollection"))
+                .withColumn("title", col("title"))
+                .withColumn("publisher", col("publisher"))
+                .withColumn("bestaccessright", col("bestaccessright"))
+                .withColumn("collectedfrom", col("collectedfrom"))
+                .withColumn("resulttype", col("resulttype"))
+                .withColumn("language", col("language"))
+                .withColumn("country", col("country"))
+                .withColumn("description", col("description"))
+                .withColumn("dateofacceptance", col("dateofacceptance"))
+                .withColumn("embargoenddate", col("embargoenddate"))
+                .withColumn("resourcetype", col("resourcetype"))
+                .withColumn("target", col("target"))
+                .withColumn("reltype", col("reltype"))
+                .withColumn("subreltype",col("subreltype"))
+                .withColumn("pid", flatten(col("pid")))
+                .withColumn("author", flatten(col("author")))
+                .withColumn("subject", flatten(col("subject")))
+                .withColumn("externalreference" ,flatten(col("externalreference"));
 
 
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
@@ -214,7 +211,7 @@ public class Mapper implements Serializable {
         List<String> columnsRes = Arrays.asList(groupedRecordsRes.columns());
 
         // Broadcast the variables needed by the workers
-        ClassTag<BroadcastVars> classTagBroadcastVars = scala.reflect.ClassTag$.MODULE$.apply(BroadcastVars.class);
+        ClassTag<BroadcastVars> classTagBroadcastVars = ClassTag$.MODULE$.apply(BroadcastVars.class);
 
 
         Broadcast<BroadcastVars> broadcastColumns = sparkSession.sparkContext()
