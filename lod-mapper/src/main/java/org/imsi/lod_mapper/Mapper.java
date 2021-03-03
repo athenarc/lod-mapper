@@ -67,7 +67,9 @@ public class Mapper implements Serializable {
         sparkSession.conf().set("spark.shuffle.io.retryWait", "60s");
         sparkSession.conf().set("spark.shuffle.io.maxRetries", 10);
         sparkSession.conf().set("spark.network.timeout", "800s");
-        sparkSession.conf().set("spark.dynamicAllocation.executorIdleTimeout", "1200s");
+        sparkSession.conf().set("spark.dynamicAllocation.executorIdleTimeout", 1200);
+        sparkSession.conf().set("spark.dynamicAllocation.enabled","false");
+        sparkSession.conf().set("spark.dynamicAllocation.enabled",false);
 
 
         // Delete data if already exists
