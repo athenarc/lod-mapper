@@ -8,6 +8,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.broadcast.Broadcast;
@@ -416,6 +417,18 @@ public class Mapper implements Serializable {
         }, Encoders.bean(RDF.class));
         ;
 
+        rdfDatasetOrg.schema();
+        rdfDatasetPrj.schema();
+        rdfDatasetDS.schema();
+//        JavaRDD<RDF> rdfrddres = rdfDatasetRes.javaRDD();
+//        JavaRDD<SingleRDF> srRDD = rdfrddres.map((Function<RDF, SingleRDF>) row -> {
+//            String rid = row.getId();
+//            String property = row.getProperty();
+//            String value = row.getValue();
+//            SingleRDF singleRDF = new SingleRDF(rid, property, value);
+//            return singleRDF;
+//        });
+
         // Create a single dataset of RDFS.
         Dataset<SingleRDF> rdfsDS = rdfDatasetDS.map((MapFunction<RDF, SingleRDF>) row -> {
             String rid = row.getId();
@@ -461,11 +474,11 @@ public class Mapper implements Serializable {
         rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
 
     //repartition
-        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD();
-        JavaPairRDD<SingleRDF, Integer> test = rdfsResOrg.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
-        test.partitionBy(new SingleRDFPartitioner(configObject.getNumPartitions()));
-        JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
-        outputRdd.saveAsTextFile(configObject.getDatapath() + "/result/");
+//        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD();
+//        JavaPairRDD<SingleRDF, Integer> test = rdfsResOrg.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
+//        test.partitionBy(new SingleRDFPartitioner(configObject.getNumPartitions()));
+//        JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
+//        outputRdd.saveAsTextFile(configObject.getDatapath() + "/result/");
 
 
 //        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
