@@ -414,20 +414,7 @@ public class Mapper implements Serializable {
                 }
             }
             return rdfs.iterator();
-        }, Encoders.bean(RDF.class));
-        ;
-
-        rdfDatasetOrg.printSchema();
-        rdfDatasetPrj.printSchema();
-        rdfDatasetDS.printSchema();
-//        JavaRDD<RDF> rdfrddres = rdfDatasetRes.javaRDD();
-//        JavaRDD<SingleRDF> srRDD = rdfrddres.map((Function<RDF, SingleRDF>) row -> {
-//            String rid = row.getId();
-//            String property = row.getProperty();
-//            String value = row.getValue();
-//            SingleRDF singleRDF = new SingleRDF(rid, property, value);
-//            return singleRDF;
-//        });
+        }, Encoders.bean(RDF.class)).repartition(configObject.getNumPartitions(),col("id"));
 
         // Create a single dataset of RDFS.
         Dataset<SingleRDF> rdfsDS = rdfDatasetDS.map((MapFunction<RDF, SingleRDF>) row -> {
@@ -454,13 +441,22 @@ public class Mapper implements Serializable {
             return singleRDF;
         }, Encoders.bean(SingleRDF.class));
 
-        Dataset<SingleRDF> rdfsRes = rdfDatasetRes.map((MapFunction<RDF, SingleRDF>) row -> {
+//        Dataset<SingleRDF> rdfsRes = rdfDatasetRes.map((MapFunction<RDF, SingleRDF>) row -> {
+//            String rid = row.getId();
+//            String property = row.getProperty();
+//            String value = row.getValue();
+//            SingleRDF singleRDF = new SingleRDF(rid, property, value);
+//            return singleRDF;
+//        }, Encoders.bean(SingleRDF.class));
+
+        JavaRDD<RDF> rdfRDDres = rdfDatasetRes.javaRDD();
+        JavaRDD<SingleRDF> srResRDD = rdfRDDres.map((Function<RDF, SingleRDF>) row -> {
             String rid = row.getId();
             String property = row.getProperty();
             String value = row.getValue();
             SingleRDF singleRDF = new SingleRDF(rid, property, value);
             return singleRDF;
-        }, Encoders.bean(SingleRDF.class));
+        });
 
 
         JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD();
@@ -474,11 +470,10 @@ public class Mapper implements Serializable {
         rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
 
     //repartition
-//        JavaRDD<SingleRDF> rdfsResOrg = rdfsRes.javaRDD();
-//        JavaPairRDD<SingleRDF, Integer> test = rdfsResOrg.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
-//        test.partitionBy(new SingleRDFPartitioner(configObject.getNumPartitions()));
-//        JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
-//        outputRdd.saveAsTextFile(configObject.getDatapath() + "/result/");
+        JavaPairRDD<SingleRDF, Integer> test = srResRDD.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
+        test.partitionBy(new SingleRDFPartitioner(configObject.getNumPartitions()));
+        JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
+        outputRdd.saveAsTextFile(configObject.getDatapath() + "/result/");
 
 
 //        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
