@@ -417,9 +417,9 @@ public class Mapper implements Serializable {
         }, Encoders.bean(RDF.class));
         ;
 
-        rdfDatasetOrg.schema();
-        rdfDatasetPrj.schema();
-        rdfDatasetDS.schema();
+        rdfDatasetOrg.printSchema();
+        rdfDatasetPrj.printSchema();
+        rdfDatasetDS.printSchema();
 //        JavaRDD<RDF> rdfrddres = rdfDatasetRes.javaRDD();
 //        JavaRDD<SingleRDF> srRDD = rdfrddres.map((Function<RDF, SingleRDF>) row -> {
 //            String rid = row.getId();
