@@ -1,0 +1,7 @@
+{
+	"appName" : "lodMapper",
+	"warehouseLocation" : "/user/hive/warehouse",
+	"query" : "",
+	"propertyMap" : "http://lod.openaire.eu/vocab/",
+	"valueMap" : "http://lod.openaire.eu/val/"
+}

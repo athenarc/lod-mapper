@@ -252,9 +252,9 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j).toLowerCase();
-                                if (rel.contains("result")) relVal = relVal.concat("result/");
-                                else if (rel.contains("organisation")) relVal = relVal.concat("organisation/");
-                                else if (rel.contains("project")) relVal = relVal.concat("project/");
+                                if (rel.contains("Result")) relVal = relVal.concat("result/");
+                                else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
+                                else if (rel.contains("Project")) relVal = relVal.concat("project/");
                                 ttl.setPredicateObject(propertyVal + val, relVal + target.get(j));
                                 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
@@ -292,7 +292,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-                RDF rdfH = new RDF(idVal + "organisation/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/OrganisationEntity>");
+                RDF rdfH = new RDF(idVal + "organization/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/OrganizationEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
@@ -308,11 +308,11 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j).toLowerCase();
-                                if (rel.contains("result")) relVal = relVal.concat("result/");
-                                else if (rel.contains("datasource")) relVal = relVal.concat("datasource/");
-                                else if (rel.contains("project")) relVal = relVal.concat("project/");
+                                if (rel.contains("Result")) relVal = relVal.concat("result/");
+                                else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
+                                else if (rel.contains("Project")) relVal = relVal.concat("project/");
 
-                                RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
+                                RDF rdf = new RDF(idVal + "organization/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
                             }
                     } else {
@@ -327,7 +327,7 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
-                                RDF rdf = new RDF(idVal + "organisation/" + rowId, propertyVal + columnsI.get(i), val);
+                                RDF rdf = new RDF(idVal + "organization/" + rowId, propertyVal + columnsI.get(i), val);
                                 rdfs.add(rdf);
                             }
                     }
@@ -365,9 +365,9 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j).toLowerCase();
-                                if (rel.contains("result")) relVal = relVal.concat("result/");
-                                else if (rel.contains("organisation")) relVal = relVal.concat("organisation/");
-                                else if (rel.contains("datasource")) relVal = relVal.concat("datasource/");
+                                if (rel.contains("Result")) relVal = relVal.concat("result/");
+                                else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
+                                else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
 
                                 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
@@ -417,9 +417,9 @@ public class Mapper implements Serializable {
                                 String relVal = "<http://lod.openaire.eu/data/";
 
                                 String rel = relType.get(j).toLowerCase();
-                                if (rel.contains("datasource")) relVal = relVal.concat("datasource/");
-                                else if (rel.contains("organisation")) relVal = relVal.concat("organisation/");
-                                else if (rel.contains("project")) relVal = relVal.concat("project/");
+                                if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
+                                else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
+                                else if (rel.contains("Project")) relVal = relVal.concat("project/");
 
                                 RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
@@ -497,7 +497,7 @@ public class Mapper implements Serializable {
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
 
         JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD();
-        rdfsOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organisation/");
+        rdfsOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organization/");
 
 
         JavaRDD<SingleRDF> rdfsPrjOrg = rdfsPrj.javaRDD();
@@ -516,7 +516,7 @@ public class Mapper implements Serializable {
 //        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
 //        }
 //        
-//        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/organisation/" + "/part*")));
+//        files = Arrays.asList(fs.globStatus(new Path(configObject.getDatapath() + "/organization/" + "/part*")));
 //        for(FileStatus file : files) {
 //        	fs.rename(new Path(file.toString()), new Path(file.toString() + ".nt"));
 //        }
