@@ -18,10 +18,7 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.SparkSession.Builder;
 import org.apache.spark.sql.types.DataTypes;
-import org.imsi.lod_mapper.model.BroadcastVars;
-import org.imsi.lod_mapper.model.ConfigObject;
-import org.imsi.lod_mapper.model.RDF;
-import org.imsi.lod_mapper.model.SingleRDF;
+import org.imsi.lod_mapper.model.*;
 import org.imsi.lod_mapper.util.MapCountries;
 import org.imsi.lod_mapper.util.MapLanguages;
 import org.imsi.lod_mapper.util.SingleRDFPartitioner;
@@ -224,8 +221,10 @@ public class Mapper implements Serializable {
          */
 
         /* DS */
-        Dataset<RDF> rdfDatasetDS = groupedRecordsDS.flatMap((FlatMapFunction<Row, RDF>) row -> {
+        Dataset<TTL> rdfDatasetDS = groupedRecordsDS.flatMap((FlatMapFunction<Row, TTL>) row -> {
             List<RDF> rdfs = new ArrayList<>();
+            List<TTL> ttls = new ArrayList<>();
+            TTL ttl = new TTL();
             List<String> columnsI = broadcastColumns.getValue().getColumnsDS();
             String propertyVal = broadcastColumns.getValue().getPropertyMap();
             String valueVal = broadcastColumns.getValue().getValueMap();
@@ -235,6 +234,8 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
+                ttl.setId(idVal+ "datasource/" + rowId);
+                ttl.setRdfType("http://lod.openaire.eu/vocab/DatasourceEntity");
                 RDF rdfH = new RDF(idVal + "datasource/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/DatasourceEntity>");
                 rdfs.add(rdfH);
                 for (int i = 1; i < columnsI.size(); i++) {
@@ -254,7 +255,7 @@ public class Mapper implements Serializable {
                                 if (rel.contains("result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("organisation")) relVal = relVal.concat("organisation/");
                                 else if (rel.contains("project")) relVal = relVal.concat("project/");
-
+                                ttl.setPredicateObject(propertyVal + val,relVal + target.get(j));
                                 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
                             }
@@ -265,14 +266,16 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
+                                ttl.setPredicateObject(propertyVal + columnsI.get(i),val);
                                 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + columnsI.get(i), val);
                                 rdfs.add(rdf);
                             }
                     }
                 }
             }
-            return rdfs.iterator();
-        }, Encoders.bean(RDF.class));
+            ttls.add(ttl);
+            return ttls.iterator() ;//rdfs.iterator();
+        }, Encoders.bean(TTL.class));
 
         /* ORG */
         Dataset<RDF> rdfDatasetOrg = groupedRecordsOrg.flatMap((FlatMapFunction<Row, RDF>) row -> {
@@ -445,13 +448,13 @@ public class Mapper implements Serializable {
         }, Encoders.bean(RDF.class));
 
         // Create a single dataset of RDFS.
-        Dataset<SingleRDF> rdfsDS = rdfDatasetDS.map((MapFunction<RDF, SingleRDF>) row -> {
-            String rid = row.getId();
-            String property = row.getProperty();
-            String value = row.getValue();
-            SingleRDF singleRDF = new SingleRDF(rid, property, value);
-            return singleRDF;
-        }, Encoders.bean(SingleRDF.class));
+        Dataset<SingleTTL> rdfsDS = rdfDatasetDS.map((MapFunction<TTL, SingleTTL>) row -> {
+//            String rid = row.getId();
+//            String property = row.getProperty();
+//            String value = row.getValue();
+//            SingleRDF singleRDF = new SingleRDF(rid, property, value);
+            return new SingleTTL(row);
+        }, Encoders.bean(SingleTTL.class));
 
         Dataset<SingleRDF> rdfsOrg = rdfDatasetOrg.map((MapFunction<RDF, SingleRDF>) row -> {
             String rid = row.getId();
@@ -487,7 +490,7 @@ public class Mapper implements Serializable {
         });
 
 
-        JavaRDD<SingleRDF> rdfsDSRDD = rdfsDS.javaRDD();
+        JavaRDD<SingleTTL> rdfsDSRDD = rdfsDS.javaRDD();
         rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
 
         JavaRDD<SingleRDF> rdfsOrgRDD = rdfsOrg.javaRDD();
