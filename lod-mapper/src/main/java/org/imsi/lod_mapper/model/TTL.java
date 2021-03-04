@@ -55,7 +55,7 @@ public class TTL implements Serializable {
         for (String key : predicateObject.keySet()) {
             if (counter < size - 1) {
 
-                ttl += "<" + key + "> " + predicateObject.get(key) + ";";
+                ttl += "<" + key + "> " + predicateObject.get(key) + "; ";
             } else {
                 ttl += "<" + key + "> " + predicateObject.get(key) + ".";
             }

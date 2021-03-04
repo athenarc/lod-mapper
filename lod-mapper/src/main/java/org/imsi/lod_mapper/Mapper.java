@@ -263,6 +263,7 @@ public class Mapper implements Serializable {
                         if (col != null)
                             for (int j = 0; j < col.size(); j++) {
                                 String val = col.get(j).toString();
+                                if(val.equals("")) continue;
                                 if (val.contains("NULL")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
@@ -325,11 +326,12 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < col.size(); j++) {
                                 String val = col.get(j);
                                 if (colName.contentEquals("country")) {
-                                    System.out.println("1: " + val);
+//                                    System.out.println("1: " + val);
                                     val = mapCountries.getCountryURI(col.get(j).trim());
-                                    System.out.println("2: " + val);
+//                                    System.out.println("2: " + val);
                                 }
                                 if (val.contains("NULL")) continue;
+                                if(val.equals("")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
@@ -388,6 +390,7 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < col.size(); j++) {
                                 String val = col.get(j).toString();
                                 if (val.contains("NULL")) continue;
+                                if(val.equals("")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
@@ -449,8 +452,8 @@ public class Mapper implements Serializable {
                                     String val = col.get(j);
                                     if (colName.contentEquals("language")) {
                                         val = mapLanguages.getLangURI(col.get(j));
-                                        System.out.println(val);
                                     }
+                                    if(val.equals("")) continue;
                                     if (val.contains("NULL")) continue;
                                     if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                     else val = '"' + val + '"';
