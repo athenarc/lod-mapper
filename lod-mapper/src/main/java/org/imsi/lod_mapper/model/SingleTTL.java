@@ -28,9 +28,9 @@ public class SingleTTL implements Serializable {
         for (String key : predicateObject.keySet()) {
             if (counter < size - 1) {
 
-                ttl += "<" + key + "> " + predicateObject.get(key) + ";";
+                ttlString += "<" + key + "> " + predicateObject.get(key) + ";";
             } else {
-                ttl += "<" + key + "> " + predicateObject.get(key) + ".";
+                ttlString += "<" + key + "> " + predicateObject.get(key) + ".";
             }
             counter++;
         }
