@@ -437,6 +437,7 @@ public class Mapper implements Serializable {
                                 String relVal = "<http://lod.openaire.eu/data/";
 
                                 String rel = relType.get(j);
+                                System.out.println(rel);
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
