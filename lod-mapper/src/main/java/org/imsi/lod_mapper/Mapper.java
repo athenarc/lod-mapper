@@ -294,6 +294,7 @@ public class Mapper implements Serializable {
             if (!rowId.contains("dedup")) {
                 RDF rdfH = new RDF(idVal + "organization/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/OrganizationEntity>");
                 rdfs.add(rdfH);
+                
                 for (int i = 1; i < columnsI.size(); i++) {
                     List<String> col = row.getList(i);
                     String colName = columnsI.get(i);
