@@ -195,11 +195,11 @@ public class Mapper implements Serializable {
                 .withColumn("resourcetype", col("resourcetype"))
                 .withColumn("target", col("target"))
                 .withColumn("reltype", col("reltype"))
-                .withColumn("subreltype",col("subreltype"))
+                .withColumn("subreltype", col("subreltype"))
                 .withColumn("pid", flatten(col("pid")))
                 .withColumn("author", flatten(col("author")))
                 .withColumn("subject", flatten(col("subject")))
-                .withColumn("externalreference" ,flatten(col("externalreference")));
+                .withColumn("externalreference", flatten(col("externalreference")));
 
 
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
@@ -234,7 +234,7 @@ public class Mapper implements Serializable {
             List<String> target = new ArrayList<>();
             List<String> relType = new ArrayList<>();
             if (!rowId.contains("dedup")) {
-                ttl.setId(idVal+ "datasource/" + rowId);
+                ttl.setId(idVal + "datasource/" + rowId);
                 ttl.setRdfType("http://lod.openaire.eu/vocab/DatasourceEntity");
                 RDF rdfH = new RDF(idVal + "datasource/" + rowId, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "<http://lod.openaire.eu/vocab/DatasourceEntity>");
                 rdfs.add(rdfH);
@@ -255,7 +255,7 @@ public class Mapper implements Serializable {
                                 if (rel.contains("result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("organisation")) relVal = relVal.concat("organisation/");
                                 else if (rel.contains("project")) relVal = relVal.concat("project/");
-                                ttl.setPredicateObject(propertyVal + val,relVal + target.get(j));
+                                ttl.setPredicateObject(propertyVal + val, relVal + target.get(j));
                                 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
                             }
@@ -267,7 +267,7 @@ public class Mapper implements Serializable {
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
 //                                System.out.println("PO "+propertyVal + columnsI.get(i)+"   "+val);
-                                ttl.setPredicateObject(propertyVal + columnsI.get(i),val);
+                                ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
                                 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + columnsI.get(i), val);
                                 rdfs.add(rdf);
                             }
@@ -277,7 +277,7 @@ public class Mapper implements Serializable {
                 ttls.add(ttl);
             }
 
-            return ttls.iterator() ;//rdfs.iterator();
+            return ttls.iterator();//rdfs.iterator();
         }, Encoders.bean(TTL.class));
 
         /* ORG */

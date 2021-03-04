@@ -12,24 +12,32 @@ public class SingleTTL implements Serializable {
 
 
     private String ttl;
-    public SingleTTL() {}
 
-    public SingleTTL(String rdf) {this.ttl = ttl;}
+    public SingleTTL() {
+    }
+
+    public SingleTTL(String rdf) {
+        this.ttl = ttl;
+    }
 
     public SingleTTL(TTL ttlObject) {
-        String ttlString = "<"+ttlObject.getId()+"> a <"+ttlObject.getRdfType()+">; ";
-        Map<String,String> predicateObject = ttlObject.getPredicaateObject();
-        for(String key : predicateObject.keySet()){
-            if(predicateObject.keySet().iterator().hasNext()){
-                ttlString+="<"+key+">"+" <"+predicateObject.get(key)+">; ";
-            }else{
-                ttlString+="<"+key+">"+" <"+predicateObject.get(key)+">.";
-            }
+        String ttlString = "<" + ttlObject.getId() + "> a <" + ttlObject.getRdfType() + ">; ";
+        Map<String, String> predicateObject = ttlObject.getPredicaateObject();
+        int counter = 0;
+        int size = predicateObject.size();
+        for (String key : predicateObject.keySet()) {
+            if (counter < size - 1) {
 
+                ttl += "<" + key + "> " + predicateObject.get(key) + ";";
+            } else {
+                ttl += "<" + key + "> " + predicateObject.get(key) + ".";
+            }
+            counter++;
         }
 
         this.ttl = ttlString;
     }
+
     public String getTtl() {
         return ttl;
     }
@@ -40,6 +48,6 @@ public class SingleTTL implements Serializable {
 
     @Override
     public String toString() {
-        return  ttl;
+        return ttl;
     }
 }
