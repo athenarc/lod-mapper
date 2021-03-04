@@ -266,7 +266,7 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
-                                System.out.println("PO "+propertyVal + columnsI.get(i)+"   "+val);
+//                                System.out.println("PO "+propertyVal + columnsI.get(i)+"   "+val);
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i),val);
                                 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + columnsI.get(i), val);
                                 rdfs.add(rdf);

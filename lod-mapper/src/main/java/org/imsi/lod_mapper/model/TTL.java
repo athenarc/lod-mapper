@@ -1,6 +1,7 @@
 package org.imsi.lod_mapper.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TTL implements Serializable {
@@ -10,7 +11,7 @@ public class TTL implements Serializable {
      */
     private static final long serialVersionUID = -4897764969105211732L;
     private String id;
-    private Map<String, String> predicateObject;
+    private Map<String, String> predicateObject = new HashMap<>();
     private  String rdfType;
 
     public String getRdfType() {
