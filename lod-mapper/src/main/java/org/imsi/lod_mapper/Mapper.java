@@ -271,9 +271,11 @@ public class Mapper implements Serializable {
                                 rdfs.add(rdf);
                             }
                     }
+
                 }
+                ttls.add(ttl);
             }
-            ttls.add(ttl);
+
             return ttls.iterator() ;//rdfs.iterator();
         }, Encoders.bean(TTL.class));
 
