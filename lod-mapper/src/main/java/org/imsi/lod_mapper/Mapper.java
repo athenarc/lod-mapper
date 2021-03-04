@@ -153,53 +153,53 @@ public class Mapper implements Serializable {
                         collect_list(col("reltype")).alias("reltype"),
                         collect_list(col("subreltype")).alias("subreltype"));
 
-//        Dataset<Row> groupedRecordsRes = resRecords
-//                .withColumn("id", col("id"))
-////                .groupBy(col("id"))
-//                .agg(
-//                        collect_set(col("originalid")).alias("originalid"),
-//                        collect_set(col("dateofcollection")).alias("dateofcollection"),
-//                        collect_set(col("title")).alias("title"),
-//                        collect_set(col("publisher")).alias("publisher"),
-//                        collect_set(col("bestaccessright")).alias("bestaccessright"),
-//                        collect_set(col("collectedfrom")).alias("collectedfrom"),
-//                        flatten(collect_set(col("pid"))).alias("pid"),
-//                        flatten(collect_set(col("author"))).alias("author"),
-//                        collect_set(col("resulttype")).alias("resulttype"),
-//                        collect_set(col("language")).alias("language"),
-//                        collect_set(col("country")).alias("country"),
-//                        flatten(collect_set(col("subject"))).alias("subject"),
-//                        collect_set(col("description")).alias("description"),
-//                        collect_set(col("dateofacceptance")).alias("dateofacceptance"),
-//                        collect_set(col("embargoenddate")).alias("embargoenddate"),
-//                        collect_set(col("resourcetype")).alias("resourcetype"),
-//                        flatten(collect_set(col("externalreference"))).alias("externalreference"),
-//                        collect_list(col("target")).alias("target"),
-//                        collect_list(col("reltype")).alias("reltype"),
-//                        collect_list(col("subreltype")).alias("subreltype"));
-
         Dataset<Row> groupedRecordsRes = resRecords
                 .withColumn("id", col("id"))
-                .withColumn("originalid", col("originalid"))
-                .withColumn("dateofcollection", col("dateofcollection"))
-                .withColumn("title", col("title"))
-                .withColumn("publisher", col("publisher"))
-                .withColumn("bestaccessright", col("bestaccessright"))
-                .withColumn("collectedfrom", col("collectedfrom"))
-                .withColumn("resulttype", col("resulttype"))
-                .withColumn("language", col("language"))
-                .withColumn("country", col("country"))
-                .withColumn("description", col("description"))
-                .withColumn("dateofacceptance", col("dateofacceptance"))
-                .withColumn("embargoenddate", col("embargoenddate"))
-                .withColumn("resourcetype", col("resourcetype"))
-                .withColumn("target", col("target"))
-                .withColumn("reltype", col("reltype"))
-                .withColumn("subreltype", col("subreltype"))
-                .withColumn("pid", flatten(col("pid")))
-                .withColumn("author", flatten(col("author")))
-                .withColumn("subject", flatten(col("subject")))
-                .withColumn("externalreference", flatten(col("externalreference")));
+//                .groupBy(col("id"))
+                .agg(
+                        collect_set(col("originalid")).alias("originalid"),
+                        collect_set(col("dateofcollection")).alias("dateofcollection"),
+                        collect_set(col("title")).alias("title"),
+                        collect_set(col("publisher")).alias("publisher"),
+                        collect_set(col("bestaccessright")).alias("bestaccessright"),
+                        collect_set(col("collectedfrom")).alias("collectedfrom"),
+                        flatten(collect_set(col("pid"))).alias("pid"),
+                        flatten(collect_set(col("author"))).alias("author"),
+                        collect_set(col("resulttype")).alias("resulttype"),
+                        collect_set(col("language")).alias("language"),
+                        collect_set(col("country")).alias("country"),
+                        flatten(collect_set(col("subject"))).alias("subject"),
+                        collect_set(col("description")).alias("description"),
+                        collect_set(col("dateofacceptance")).alias("dateofacceptance"),
+                        collect_set(col("embargoenddate")).alias("embargoenddate"),
+                        collect_set(col("resourcetype")).alias("resourcetype"),
+                        flatten(collect_set(col("externalreference"))).alias("externalreference"),
+                        collect_list(col("target")).alias("target"),
+                        collect_list(col("reltype")).alias("reltype"),
+                        collect_list(col("subreltype")).alias("subreltype"));
+
+//        Dataset<Row> groupedRecordsRes = resRecords
+//                .withColumn("id", col("id"))
+//                .withColumn("originalid", col("originalid"))
+//                .withColumn("dateofcollection", col("dateofcollection"))
+//                .withColumn("title", col("title"))
+//                .withColumn("publisher", col("publisher"))
+//                .withColumn("bestaccessright", col("bestaccessright"))
+//                .withColumn("collectedfrom", col("collectedfrom"))
+//                .withColumn("resulttype", col("resulttype"))
+//                .withColumn("language", col("language"))
+//                .withColumn("country", col("country"))
+//                .withColumn("description", col("description"))
+//                .withColumn("dateofacceptance", col("dateofacceptance"))
+//                .withColumn("embargoenddate", col("embargoenddate"))
+//                .withColumn("resourcetype", col("resourcetype"))
+//                .withColumn("target", col("target"))
+//                .withColumn("reltype", col("reltype"))
+//                .withColumn("subreltype", col("subreltype"))
+//                .withColumn("pid", flatten(col("pid")))
+//                .withColumn("author", flatten(col("author")))
+//                .withColumn("subject", flatten(col("subject")))
+//                .withColumn("externalreference", flatten(col("externalreference")));
 
 
         List<String> columnsDS = Arrays.asList(groupedRecordsDS.columns());
