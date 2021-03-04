@@ -252,9 +252,9 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j).toLowerCase();
-                                if (rel.contains("Result")) relVal = relVal.concat("result/");
-                                else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
-                                else if (rel.contains("Project")) relVal = relVal.concat("project/");
+                                if (rel.contains("result")) relVal = relVal.concat("result/");
+                                else if (rel.contains("organization")) relVal = relVal.concat("organization/");
+                                else if (rel.contains("project")) relVal = relVal.concat("project/");
                                 ttl.setPredicateObject(propertyVal + val, relVal + target.get(j)+">");
                                 RDF rdf = new RDF(idVal + "datasource/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
@@ -313,9 +313,9 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j).toLowerCase();
-                                if (rel.contains("Result")) relVal = relVal.concat("result/");
-                                else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
-                                else if (rel.contains("Project")) relVal = relVal.concat("project/");
+                                if (rel.contains("result")) relVal = relVal.concat("result/");
+                                else if (rel.contains("datasource")) relVal = relVal.concat("datasource/");
+                                else if (rel.contains("project")) relVal = relVal.concat("project/");
                                 ttl.setPredicateObject(propertyVal + val, relVal + target.get(j)+">");
                                 RDF rdf = new RDF(idVal + "organization/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
@@ -376,9 +376,9 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j).toLowerCase();
-                                if (rel.contains("Result")) relVal = relVal.concat("result/");
-                                else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
-                                else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
+                                if (rel.contains("result")) relVal = relVal.concat("result/");
+                                else if (rel.contains("organization")) relVal = relVal.concat("organization/");
+                                else if (rel.contains("datasource")) relVal = relVal.concat("datasource/");
                                 ttl.setPredicateObject(propertyVal + val, relVal + target.get(j)+">");
                                 RDF rdf = new RDF(idVal + "project/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
                                 rdfs.add(rdf);
@@ -434,9 +434,9 @@ public class Mapper implements Serializable {
                                 String relVal = "<http://lod.openaire.eu/data/";
 
                                 String rel = relType.get(j).toLowerCase();
-                                if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
-                                else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
-                                else if (rel.contains("Project")) relVal = relVal.concat("project/");
+                                if (rel.contains("datasource")) relVal = relVal.concat("datasource/");
+                                else if (rel.contains("organization")) relVal = relVal.concat("organization/");
+                                else if (rel.contains("project")) relVal = relVal.concat("project/");
                                 ttl.setPredicateObject(propertyVal + val, relVal + target.get(j)+">");
 //                                RDF rdf = new RDF(idVal + "result/" + rowId, propertyVal + val, relVal + target.get(j) + ">");
 //                                rdfs.add(rdf);
