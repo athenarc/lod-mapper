@@ -75,7 +75,7 @@ public class Mapper implements Serializable {
         if (fs.exists(outPutPath))
             fs.delete(outPutPath, true);
 
-        String[] schemes = {"http","https"};
+        String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator(schemes);
 
         Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS());//.repartition(configObject.getNumPartitions(),col("id"));
@@ -251,8 +251,8 @@ public class Mapper implements Serializable {
                                 String val = col.get(j).toString();
                                 if (val.equals("NULL")) continue;
                                 val = val.replace("\\", "");
-                                val = val.replace("\"","");
-                                val = val.replace("\n"," ");
+                                val = val.replace("\"", "");
+                                val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
@@ -268,9 +268,10 @@ public class Mapper implements Serializable {
                                 if (val.equals("")) continue;
                                 if (val.equals("NULL")) continue;
                                 val = val.replace("\\", "");
-                                val = val.replace("\"","");
-                                val = val.replace("\n"," ");
-                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val)) val = "<" + val + ">";
+                                val = val.replace("\"", "");
+                                val = val.replace("\n", " ");
+                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val))
+                                    val = "<" + val + ">";
                                 else val = '"' + val + '"';
 //                                System.out.println("PO "+propertyVal + columnsI.get(i)+"   "+val);
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
@@ -314,8 +315,8 @@ public class Mapper implements Serializable {
                                 String val = col.get(j).toString();
                                 if (val.equals("NULL")) continue;
                                 val = val.replace("\\", "");
-                                val = val.replace("\"","");
-                                val = val.replace("\n"," ");
+                                val = val.replace("\"", "");
+                                val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
@@ -336,9 +337,10 @@ public class Mapper implements Serializable {
                                 if (val.equals("NULL")) continue;
                                 if (val.equals("")) continue;
                                 val = val.replace("\\", "");
-                                val = val.replace("\"","");
-                                val = val.replace("\n"," ");
-                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val)) val = "<" + val + ">";
+                                val = val.replace("\"", "");
+                                val = val.replace("\n", " ");
+                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val))
+                                    val = "<" + val + ">";
                                 else val = '"' + val + '"';
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
                             }
@@ -378,8 +380,8 @@ public class Mapper implements Serializable {
                                 String val = col.get(j).toString();
                                 if (val.equals("NULL")) continue;
                                 val = val.replace("\\", "");
-                                val = val.replace("\"","");
-                                val = val.replace("\n"," ");
+                                val = val.replace("\"", "");
+                                val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
@@ -395,9 +397,10 @@ public class Mapper implements Serializable {
                                 if (val.equals("NULL")) continue;
                                 if (val.equals("")) continue;
                                 val = val.replace("\\", "");
-                                val = val.replace("\"","");
-                                val = val.replace("\n"," ");
-                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val)) val = "<" + val + ">";
+                                val = val.replace("\"", "");
+                                val = val.replace("\n", " ");
+                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val))
+                                    val = "<" + val + ">";
                                 else val = '"' + val + '"';
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
                             }
@@ -436,8 +439,8 @@ public class Mapper implements Serializable {
                                 String val = col.get(j).toString();
                                 if (val.equals("NULL")) continue;
                                 val = val.replace("\\", "");
-                                val = val.replace("\"","");
-                                val = val.replace("\n"," ");
+                                val = val.replace("\"", "");
+                                val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
@@ -451,19 +454,27 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < col.size(); j++) {
                                 try {
                                     String val = col.get(j);
-                                    if (colName.contentEquals("language")) {
-                                        val = mapLanguages.getLangURI(col.get(j));
+                                    if (colName.contentEquals("subject")) {
+                                        System.out.println(col.toString());
+                                        System.out.println(val);
                                     }
+                                    if (colName.contentEquals("author")) {
+                                        System.out.println(col.toString());
+                                        System.out.println(val);
+                                    }
+                                    if (colName.contentEquals("language"))
+                                        val = mapLanguages.getLangURI(col.get(j));
                                     if (val.equals("")) continue;
                                     if (val.equals("NULL")) continue;
                                     val = val.replace("\\", "");
-                                    val = val.replace("\"","");
-                                    val = val.replace("\n"," ");
-                                    if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val)) val = "<" + val + ">";
+                                    val = val.replace("\"", "");
+                                    val = val.replace("\n", " ");
+                                    if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val))
+                                        val = "<" + val + ">";
                                     else val = '"' + val + '"';
                                     ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
                                 } catch (Exception e) {
-                                    System.err.println(e.getMessage());
+                                    System.err.println("Eskase : " + e.getMessage());
                                     continue;
                                 }
                             }
