@@ -3,6 +3,7 @@ package org.imsi.lod_mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.api.java.JavaRDD;
@@ -73,6 +74,9 @@ public class Mapper implements Serializable {
         Path outPutPath = new Path(configObject.getDatapath());
         if (fs.exists(outPutPath))
             fs.delete(outPutPath, true);
+
+        String[] schemes = {"http","https"};
+        UrlValidator urlValidator = new UrlValidator(schemes);
 
         Dataset<Row> dsRecords = sparkSession.sql(configObject.getQueryDS());//.repartition(configObject.getNumPartitions(),col("id"));
         Dataset<Row> orgRecords = sparkSession.sql(configObject.getQueryOrg());//.repartition(configObject.getNumPartitions(),col("id"));
@@ -266,7 +270,7 @@ public class Mapper implements Serializable {
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
                                 val = val.replace("\n"," ");
-                                if (val.startsWith("http://") || val.startsWith("https://")) val = "<" + val + ">";
+                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val)) val = "<" + val + ">";
                                 else val = '"' + val + '"';
 //                                System.out.println("PO "+propertyVal + columnsI.get(i)+"   "+val);
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
@@ -334,7 +338,7 @@ public class Mapper implements Serializable {
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
                                 val = val.replace("\n"," ");
-                                if (val.startsWith("http://") || val.startsWith("https://")) val = "<" + val + ">";
+                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val)) val = "<" + val + ">";
                                 else val = '"' + val + '"';
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
                             }
@@ -393,7 +397,7 @@ public class Mapper implements Serializable {
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
                                 val = val.replace("\n"," ");
-                                if (val.startsWith("http://") || val.startsWith("https://")) val = "<" + val + ">";
+                                if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val)) val = "<" + val + ">";
                                 else val = '"' + val + '"';
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
                             }
@@ -455,7 +459,7 @@ public class Mapper implements Serializable {
                                     val = val.replace("\\", "");
                                     val = val.replace("\"","");
                                     val = val.replace("\n"," ");
-                                    if (val.startsWith("http://") || val.startsWith("https://")) val = "<" + val + ">";
+                                    if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val)) val = "<" + val + ">";
                                     else val = '"' + val + '"';
                                     ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
                                 } catch (Exception e) {
