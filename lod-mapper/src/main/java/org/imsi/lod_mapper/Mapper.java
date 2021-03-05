@@ -450,20 +450,21 @@ public class Mapper implements Serializable {
                                 ttl.setPredicateObject(propertyVal + val, relVal + target.get(j) + ">");
                             }
                     } else {
-                        if (col != null)
-                            for (int j = 0; j < col.size(); j++) {
+                        if (col != null) {
+                            List<String> column = col;
+                            for (int j = 0; j < column.size(); j++) {
                                 try {
-                                    String val = col.get(j);
+                                    String val = column.get(j);
                                     if (colName.contentEquals("subject")) {
-                                        System.out.println(col.toString());
+                                        System.out.println(column.toString());
                                         System.out.println(val);
                                     }
                                     if (colName.contentEquals("author")) {
-                                        System.out.println(col.toString());
+                                        System.out.println(column.toString());
                                         System.out.println(val);
                                     }
                                     if (colName.contentEquals("language"))
-                                        val = mapLanguages.getLangURI(col.get(j));
+                                        val = mapLanguages.getLangURI(column.get(j));
                                     if (val.equals("")) continue;
                                     if (val.equals("NULL")) continue;
                                     val = val.replace("\\", "");
@@ -478,6 +479,7 @@ public class Mapper implements Serializable {
                                     continue;
                                 }
                             }
+                        }
                     }
                 }
                 ttls.add(ttl);
