@@ -248,6 +248,7 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
+                                val = val.replace("\n"," ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
@@ -264,6 +265,7 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
+                                val = val.replace("\n"," ");
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
 //                                System.out.println("PO "+propertyVal + columnsI.get(i)+"   "+val);
@@ -309,6 +311,7 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
+                                val = val.replace("\n"," ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
@@ -330,6 +333,7 @@ public class Mapper implements Serializable {
                                 if (val.equals("")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
+                                val = val.replace("\n"," ");
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
@@ -371,6 +375,7 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
+                                val = val.replace("\n"," ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
@@ -387,6 +392,7 @@ public class Mapper implements Serializable {
                                 if (val.equals("")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
+                                val = val.replace("\n"," ");
                                 if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                 else val = '"' + val + '"';
                                 ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
@@ -427,6 +433,7 @@ public class Mapper implements Serializable {
                                 if (val.contains("NULL")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"","");
+                                val = val.replace("\n"," ");
                                 String relVal = "<http://lod.openaire.eu/data/";
 
                                 String rel = relType.get(j);
@@ -449,6 +456,7 @@ public class Mapper implements Serializable {
                                     if (val.contains("NULL")) continue;
                                     val = val.replace("\\", "");
                                     val = val.replace("\"","");
+                                    val = val.replace("\n"," ");
                                     if (val.contains("http://") || val.contains("https://")) val = "<" + val + ">";
                                     else val = '"' + val + '"';
                                     ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
