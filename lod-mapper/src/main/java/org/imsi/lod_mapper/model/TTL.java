@@ -32,11 +32,12 @@ public class TTL implements Serializable {
     }
 
     public void setPredicateObject(String predicate, String object) {
-        ArrayList<String> objects = predicateObject.get(predicate);
-        if (objects != null) {
+        ArrayList<String> objects = new ArrayList<>();
+        if (predicateObject.get(predicate) != null) {
+            objects = predicateObject.get(predicate);
             objects.add(object);
             this.predicateObject.put(predicate, objects);
-        }else{
+        } else {
             ArrayList<String> newObjects = new ArrayList<String>();
             newObjects.add(object);
             this.predicateObject.put(predicate, newObjects);
@@ -66,8 +67,8 @@ public class TTL implements Serializable {
             ArrayList<String> objects = predicateObject.get(key);
             int obSize = objects.size();
             int obCounter = 0;
-            for(String object : objects) {
-                if (counter < size - 1 && obCounter < obSize-1) {
+            for (String object : objects) {
+                if (counter < size - 1 && obCounter < obSize - 1) {
                     ttl += "<" + key + "> " + object + "; ";
                 } else {
                     ttl += "<" + key + "> " + object + ".";
