@@ -251,12 +251,12 @@ public class Mapper implements Serializable {
                                 String val = col.get(j);
                                 if (val.equals("NULL")) continue;
                                 if (val.equals("")) continue;
-                                if (val.contains("dedup")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"", "");
                                 val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
+                                if (rel.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
@@ -323,6 +323,7 @@ public class Mapper implements Serializable {
                                 val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
+                                if (rel.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
@@ -390,6 +391,7 @@ public class Mapper implements Serializable {
                                 val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
+                                if (rel.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
@@ -451,6 +453,7 @@ public class Mapper implements Serializable {
                                 val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
+                                if (rel.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
