@@ -1,6 +1,7 @@
 package org.imsi.lod_mapper.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class SingleTTL implements Serializable {
@@ -16,23 +17,30 @@ public class SingleTTL implements Serializable {
     public SingleTTL() {
     }
 
-    public SingleTTL(String rdf) {
+    public SingleTTL(String ttl) {
         this.ttl = ttl;
     }
 
     public SingleTTL(TTL ttlObject) {
         String ttlString = "<" + ttlObject.getId() + "> a <" + ttlObject.getRdfType() + ">; ";
-        Map<String, String> predicateObject = ttlObject.getPredicaateObject();
+        Map<String, ArrayList<String>> predicateObject = ttlObject.getPredicaateObject();
         int counter = 0;
         int size = predicateObject.size();
         for (String key : predicateObject.keySet()) {
-            if (counter < size - 1) {
-
-                ttlString += "<" + key + "> " + predicateObject.get(key) + "; ";
-            } else {
-                ttlString += "<" + key + "> " + predicateObject.get(key) + ".";
+            ArrayList<String> objects = predicateObject.get(key);
+            int obSize = objects.size();
+            int obCounter = 0;
+            for (String object : objects) {
+                if (counter < size - 1 && obCounter < obSize - 1) {
+                    if (counter < size - 1) {
+                        ttlString += "<" + key + "> " + object + "; ";
+                    } else {
+                        ttlString += "<" + key + "> " + object + ".";
+                    }
+                    obCounter++;
+                }
+                counter++;
             }
-            counter++;
         }
 
         this.ttl = ttlString;
