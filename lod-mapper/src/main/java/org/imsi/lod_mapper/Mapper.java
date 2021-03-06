@@ -317,7 +317,6 @@ public class Mapper implements Serializable {
                                 String val = col.get(j).toString();
                                 if (val.equals("NULL")) continue;
                                 if (val.equals("")) continue;
-                                if (val.contains("dedup")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"", "");
                                 val = val.replace("\n", " ");
@@ -384,7 +383,6 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < target.size(); j++) {
                                 String val = col.get(j);
                                 if (val.equals("")) continue;
-                                if (val.contains("dedup")) continue;
                                 if (val.equals("NULL")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"", "");
@@ -447,7 +445,6 @@ public class Mapper implements Serializable {
                                 String val = col.get(j);
                                 if (val.equals("NULL")) continue;
                                 if (val.equals("")) continue;
-                                if (val.contains("dedup")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"", "");
                                 val = val.replace("\n", " ");
@@ -499,42 +496,40 @@ public class Mapper implements Serializable {
             return ttls.iterator();
         }, Encoders.bean(TTL.class));
 
-        // Create a single dataset of RDFS.
-        Dataset<SingleTTL> rdfsDS = rdfDatasetDS.map((MapFunction<TTL, SingleTTL>) row -> new SingleTTL(row), Encoders.bean(SingleTTL.class));
+        // Create a single RDD of RDFS.
 
-        Dataset<SingleTTL> rdfsOrg = rdfDatasetOrg.map((MapFunction<TTL, SingleTTL>) row -> new SingleTTL(row), Encoders.bean(SingleTTL.class));
+        JavaRDD<TTL> rdfRDDDS = rdfDatasetDS.javaRDD();
+        JavaRDD<SingleTTL> stDsRDD = rdfRDDDS.map((Function<TTL, SingleTTL>) row -> new SingleTTL(row));
+        stDsRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
+
+        JavaRDD<TTL> rdfRDDOrg = rdfDatasetOrg.javaRDD();
+        JavaRDD<SingleTTL> stOrgRDD = rdfRDDOrg.map((Function<TTL, SingleTTL>) row -> new SingleTTL(row));
+        stOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organization/");
 
         JavaRDD<TTL> rdfRDDPrj = rdfDatasetPrj.javaRDD();
         JavaRDD<SingleTTL> stPrjRDD = rdfRDDPrj.map((Function<TTL, SingleTTL>) row -> new SingleTTL(row));
-//        Dataset<SingleTTL> rdfsPrj = rdfDatasetPrj.map((MapFunction<TTL, SingleTTL>) row -> new SingleTTL(row), Encoders.bean(SingleTTL.class));
+        stPrjRDD.saveAsTextFile(configObject.getDatapath() + "/project/");
 
-//        Dataset<SingleRDF> rdfsRes = rdfDatasetRes.map((MapFunction<RDF, SingleRDF>) row -> {
-//            String rid = row.getId();
-//            String property = row.getProperty();
-//            String value = row.getValue();
-//            SingleRDF singleRDF = new SingleRDF(rid, property, value);
-//            return singleRDF;
-//        }, Encoders.bean(SingleRDF.class));
 
         JavaRDD<TTL> rdfRDDres = rdfDatasetRes.javaRDD();
         JavaRDD<SingleTTL> srResRDD = rdfRDDres.map((Function<TTL, SingleTTL>) row -> new SingleTTL(row));
+        srResRDD.saveAsTextFile(configObject.getDatapath() + "/result/");
 
 
-        JavaRDD<SingleTTL> rdfsDSRDD = rdfsDS.javaRDD();
-        rdfsDSRDD.saveAsTextFile(configObject.getDatapath() + "/datasource/");
 
-        JavaRDD<SingleTTL> rdfsOrgRDD = rdfsOrg.javaRDD();
-        rdfsOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organization/");
+
+
+
 
 
 //        JavaRDD<SingleTTL> rdfsPrjOrg = rdfsPrj.javaRDD();
-        stPrjRDD.saveAsTextFile(configObject.getDatapath() + "/project/");
+
 
         //repartition
 //        JavaPairRDD<SingleRDF, Integer> test = srResRDD.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
 //        test.partitionBy(new SingleRDFPartitioner(configObject.getNumPartitions()));
 //        JavaRDD<SingleRDF> outputRdd = test.map(x -> x._1);
-        srResRDD.saveAsTextFile(configObject.getDatapath() + "/result/");
+
 
 
 //        fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
