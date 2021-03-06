@@ -37,10 +37,10 @@ public class SingleTTL implements Serializable {
                     } else {
                         ttlString += "<" + key + "> " + object + ".";
                     }
-                    obCounter++;
                 }
-                counter++;
+                obCounter++;
             }
+            counter++;
         }
 
         this.ttl = ttlString;

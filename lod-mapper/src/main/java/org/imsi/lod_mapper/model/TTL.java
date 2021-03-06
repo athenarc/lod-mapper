@@ -32,7 +32,7 @@ public class TTL implements Serializable {
     }
 
     public void setPredicateObject(String predicate, String object) {
-        ArrayList<String> objects = new ArrayList<>();
+        ArrayList<String> objects;
         if (predicateObject.get(predicate) != null) {
             objects = predicateObject.get(predicate);
             objects.add(object);
