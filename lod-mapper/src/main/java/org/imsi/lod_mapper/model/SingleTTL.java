@@ -31,7 +31,7 @@ public class SingleTTL implements Serializable {
             int obSize = objects.size();
             int obCounter = 0;
             for (String object : objects) {
-                if (counter < size - 1 && obCounter < obSize - 1) {
+                if (counter < size - 1 && obCounter < obSize - 1 && obSize > 1) {
                     if (counter < size - 1) {
                         ttlString += "<" + key + "> " + object + "; ";
                     } else {
