@@ -455,17 +455,18 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < column.size(); j++) {
                                 try {
                                     String val = column.get(j);
-                                    if (colName.contentEquals("subject")) {
-                                        System.out.println(column.toString());
-                                        System.out.println(val);
-                                    }
-                                    if (colName.contentEquals("author")) {
-                                        System.out.println(column.toString());
-                                        System.out.println(val);
-                                    }
+//                                    if (colName.contentEquals("subject")) {
+//                                        System.out.println(column.toString());
+//                                        System.out.println(val);
+//                                    }
+//                                    if (colName.contentEquals("author")) {
+//                                        System.out.println(column.toString());
+//                                        System.out.println(val);
+//                                    }
                                     if (colName.contentEquals("language"))
                                         val = mapLanguages.getLangURI(column.get(j));
                                     if (val.equals("")) continue;
+                                    if (val==null) continue;
                                     if (val.equals("NULL")) continue;
                                     val = val.replace("\\", "");
                                     val = val.replace("\"", "");
@@ -475,7 +476,7 @@ public class Mapper implements Serializable {
                                     else val = '"' + val + '"';
                                     ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
                                 } catch (Exception e) {
-                                    System.err.println("Eskase : " + e.getMessage());
+//                                    System.err.println("Eskase : " + e.getMessage());
                                     continue;
                                 }
                             }
