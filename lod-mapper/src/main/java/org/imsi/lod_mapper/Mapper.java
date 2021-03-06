@@ -256,12 +256,13 @@ public class Mapper implements Serializable {
                                 val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
-                                if (rel.contains("dedup")) continue;
+                                String relId = target.get(j);
+                                if (relId.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
                                 else if (rel.contains("Project")) relVal = relVal.concat("project/");
-                                ttl.setPredicateObject(propertyVal + val, relVal + target.get(j) + ">");
+                                ttl.setPredicateObject(propertyVal + val, relVal + relId + ">");
                             }
                     } else {
                         if (col != null)
@@ -322,12 +323,13 @@ public class Mapper implements Serializable {
                                 val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
-                                if (rel.contains("dedup")) continue;
+                                String relId = target.get(j);
+                                if (relId.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
                                 else if (rel.contains("Project")) relVal = relVal.concat("project/");
-                                ttl.setPredicateObject(propertyVal + val, relVal + target.get(j) + ">");
+                                ttl.setPredicateObject(propertyVal + val, relVal + relId + ">");
                             }
                     } else {
                         if (col != null)
@@ -389,12 +391,13 @@ public class Mapper implements Serializable {
                                 val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
-                                if (rel.contains("dedup")) continue;
+                                String relId = target.get(j);
+                                if (relId.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
                                 else if (rel.contains("Project")) relVal = relVal.concat("project/");
-                                ttl.setPredicateObject(propertyVal + val, relVal + target.get(j) + ">");
+                                ttl.setPredicateObject(propertyVal + val, relVal + relId + ">");
                             }
                     } else {
                         if (col != null)
@@ -450,12 +453,13 @@ public class Mapper implements Serializable {
                                 val = val.replace("\n", " ");
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
-                                if (rel.contains("dedup")) continue;
+                                String relId = target.get(j);
+                                if (relId.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
                                 else if (rel.contains("Datasource")) relVal = relVal.concat("datasource/");
                                 else if (rel.contains("Project")) relVal = relVal.concat("project/");
-                                ttl.setPredicateObject(propertyVal + val, relVal + target.get(j) + ">");
+                                ttl.setPredicateObject(propertyVal + val, relVal + relId + ">");
                             }
                     } else {
                         if (col != null) {
