@@ -35,6 +35,8 @@ public class SingleTTL implements Serializable {
                     ttlString += "<" + key + "> " + object + "; ";
                 else if (counter < size - 1 && obCounter < obSize - 1)
                     ttlString += "<" + key + "> " + object + "; ";
+                else if (counter < size - 1)
+                    ttlString += "<" + key + "> " + object + "; ";
                 else
                     ttlString += "<" + key + "> " + object + ".";
 

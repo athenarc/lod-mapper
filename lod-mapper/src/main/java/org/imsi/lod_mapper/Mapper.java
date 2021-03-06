@@ -248,8 +248,10 @@ public class Mapper implements Serializable {
                     } else if (colName.contentEquals("subreltype")) {
                         if (col != null)
                             for (int j = 0; j < target.size(); j++) {
-                                String val = col.get(j).toString();
+                                String val = col.get(j);
                                 if (val.equals("NULL")) continue;
+                                if (val.equals("")) continue;
+                                if (val.contains("dedup")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"", "");
                                 val = val.replace("\n", " ");
@@ -314,6 +316,8 @@ public class Mapper implements Serializable {
                             for (int j = 0; j < target.size(); j++) {
                                 String val = col.get(j).toString();
                                 if (val.equals("NULL")) continue;
+                                if (val.equals("")) continue;
+                                if (val.contains("dedup")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"", "");
                                 val = val.replace("\n", " ");
@@ -377,7 +381,9 @@ public class Mapper implements Serializable {
                     } else if (colName.contentEquals("subreltype")) {
                         if (col != null)
                             for (int j = 0; j < target.size(); j++) {
-                                String val = col.get(j).toString();
+                                String val = col.get(j);
+                                if (val.equals("")) continue;
+                                if (val.contains("dedup")) continue;
                                 if (val.equals("NULL")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"", "");
@@ -436,8 +442,10 @@ public class Mapper implements Serializable {
                     } else if (colName.contentEquals("subreltype")) {
                         if (col != null)
                             for (int j = 0; j < target.size(); j++) {
-                                String val = col.get(j).toString();
+                                String val = col.get(j);
                                 if (val.equals("NULL")) continue;
+                                if (val.equals("")) continue;
+                                if (val.contains("dedup")) continue;
                                 val = val.replace("\\", "");
                                 val = val.replace("\"", "");
                                 val = val.replace("\n", " ");
@@ -466,7 +474,7 @@ public class Mapper implements Serializable {
                                     if (colName.contentEquals("language"))
                                         val = mapLanguages.getLangURI(column.get(j));
                                     if (val.equals("")) continue;
-                                    if (val==null) continue;
+                                    if (val == null) continue;
                                     if (val.equals("NULL")) continue;
                                     val = val.replace("\\", "");
                                     val = val.replace("\"", "");
@@ -493,7 +501,9 @@ public class Mapper implements Serializable {
 
         Dataset<SingleTTL> rdfsOrg = rdfDatasetOrg.map((MapFunction<TTL, SingleTTL>) row -> new SingleTTL(row), Encoders.bean(SingleTTL.class));
 
-        Dataset<SingleTTL> rdfsPrj = rdfDatasetPrj.map((MapFunction<TTL, SingleTTL>) row -> new SingleTTL(row), Encoders.bean(SingleTTL.class));
+        JavaRDD<TTL> rdfRDDPrj = rdfDatasetPrj.javaRDD();
+        JavaRDD<SingleTTL> stPrjRDD = rdfRDDPrj.map((Function<TTL, SingleTTL>) row -> new SingleTTL(row));
+//        Dataset<SingleTTL> rdfsPrj = rdfDatasetPrj.map((MapFunction<TTL, SingleTTL>) row -> new SingleTTL(row), Encoders.bean(SingleTTL.class));
 
 //        Dataset<SingleRDF> rdfsRes = rdfDatasetRes.map((MapFunction<RDF, SingleRDF>) row -> {
 //            String rid = row.getId();
@@ -514,8 +524,8 @@ public class Mapper implements Serializable {
         rdfsOrgRDD.saveAsTextFile(configObject.getDatapath() + "/organization/");
 
 
-        JavaRDD<SingleTTL> rdfsPrjOrg = rdfsPrj.javaRDD();
-        rdfsPrjOrg.saveAsTextFile(configObject.getDatapath() + "/project/");
+//        JavaRDD<SingleTTL> rdfsPrjOrg = rdfsPrj.javaRDD();
+        stPrjRDD.saveAsTextFile(configObject.getDatapath() + "/project/");
 
         //repartition
 //        JavaPairRDD<SingleRDF, Integer> test = srResRDD.mapToPair((PairFunction<SingleRDF, SingleRDF, Integer>) s -> new Tuple2<>(s, s.getRdf().length()));
