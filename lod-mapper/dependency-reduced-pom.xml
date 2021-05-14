@@ -36,6 +36,21 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <releases />
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Maven Repository</name>
+      <url>https://repo1.maven.org/maven2</url>
+    </repository>
+    <repository>
+      <id>cloudera</id>
+      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -43,61 +58,68 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>org.apache.jena</groupId>
-          <artifactId>jena-arq</artifactId>
-          <version>3.17.0</version>
-          <scope>compile</scope>
-      </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
-      <scope>compile</scope>
-    </dependency>
-      <dependency>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-common</artifactId>
-          <version>2.6.0-cdh5.13.3</version>
-          <scope>compile</scope>
-      </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.11</artifactId>
+      <artifactId>spark-hive_2.11</artifactId>
       <version>2.4.0.cloudera2</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>spark-hive-exec_2.11</artifactId>
+          <groupId>org.apache.spark</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>hive-metastore</artifactId>
+          <groupId>org.apache.hive</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>calcite-avatica</artifactId>
+          <groupId>org.apache.calcite</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>calcite-core</artifactId>
+          <groupId>org.apache.calcite</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jodd-core</artifactId>
+          <groupId>org.jodd</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>datanucleus-core</artifactId>
+          <groupId>org.datanucleus</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>datanucleus-api-jdo</artifactId>
+          <groupId>org.datanucleus</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>datanucleus-rdbms</artifactId>
+          <groupId>org.datanucleus</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>libfb303</artifactId>
+          <groupId>org.apache.thrift</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>derby</artifactId>
+          <groupId>org.apache.derby</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-sql_2.11</artifactId>
-      <version>2.4.0.cloudera2</version>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>apache-jena-libs</artifactId>
+      <version>3.17.0</version>
+      <type>pom</type>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-catalyst_2.11</artifactId>
-      <version>2.4.0.cloudera2</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>2.11.12</version>
-      <scope>compile</scope>
-    </dependency>
-      <dependency>
-          <groupId>commons-validator</groupId>
-          <artifactId>commons-validator</artifactId>
-          <version>1.7</version>
-          <scope>compile</scope>
-      </dependency>
   </dependencies>
   <properties>
     <scala.binary.version>2.11</scala.binary.version>
     <log4j.version>2.5</log4j.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spark.version>2.4.0</spark.version>
+    <spark.version>2.4.0.cloudera2</spark.version>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 </project>
