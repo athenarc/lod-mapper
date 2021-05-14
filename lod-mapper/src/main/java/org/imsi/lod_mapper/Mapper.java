@@ -483,7 +483,7 @@ public class Mapper implements Serializable {
                                     val = val.replace("\\", "");
                                     val = val.replace("\"", "");
                                     val = val.replace("\n", " ");
-                                    if (val.startsWith("http://") || val.startsWith("https://") && urlValidator.isValid(val))
+                                    if ((val.startsWith("http://") || val.startsWith("https://")) && urlValidator.isValid(val))
                                         val = "<" + val + ">";
                                     else val = '"' + val + '"';
                                     ttl.setPredicateObject(propertyVal + columnsI.get(i), val);
