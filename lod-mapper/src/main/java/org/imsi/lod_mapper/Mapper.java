@@ -257,6 +257,7 @@ public class Mapper implements Serializable {
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 String relId = target.get(j);
+                                if(!rel.startsWith("datasource")) continue;
                                 if (relId.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
@@ -324,6 +325,7 @@ public class Mapper implements Serializable {
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 String relId = target.get(j);
+                                if(!rel.startsWith("organization")) continue;
                                 if (relId.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
@@ -392,6 +394,7 @@ public class Mapper implements Serializable {
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 String relId = target.get(j);
+                                if(!rel.startsWith("project")) continue;
                                 if (relId.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
@@ -454,6 +457,7 @@ public class Mapper implements Serializable {
                                 String relVal = "<http://lod.openaire.eu/data/";
                                 String rel = relType.get(j);
                                 String relId = target.get(j);
+                                if(!rel.startsWith("result")) continue;
                                 if (relId.contains("dedup")) continue;
                                 if (rel.contains("Result")) relVal = relVal.concat("result/");
                                 else if (rel.contains("Organization")) relVal = relVal.concat("organization/");
